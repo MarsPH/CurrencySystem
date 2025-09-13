@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "CurrencyComponent.generated.h"
 
+class UBoxComponent;
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CURRENCYSYSTEM_API UCurrencyComponent : public UActorComponent
@@ -26,11 +28,23 @@ public:
 	bool SpendCurrency(int32 Amount);
 	UFUNCTION(BlueprintCallable)
 	bool CanAfford(int32 Amount);
+	UFUNCTION(BlueprintCallable)
+	void Purchase(UObject *ObjectToBuy);
+	
+	UPROPERTY()
+    	UBoxComponent* BoxComponent;
 	
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult); // overlapBegin
+	UFUNCTION()
+	void OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex); // OverlapEnd
 
 public:	
 	// Called every frame

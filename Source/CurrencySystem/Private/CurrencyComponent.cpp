@@ -3,6 +3,9 @@
 
 #include "CurrencyComponent.h"
 
+#include "ICostable.h"
+#include "MovieSceneTracksComponentTypes.h"
+#include "Components/BoxComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values for this component's properties
@@ -13,18 +16,29 @@ UCurrencyComponent::UCurrencyComponent(): CurrentCurrency(0), MaxCurrency(0)
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
+	BoxComponent = CreateDefaultSubobject<UBoxComponent>(FName("BoxComponent")); //Assigning an subobject of box comp
+	BoxComponent->SetBoxExtent(FVector(74.0f, 125.0f, 100.0f));
+	//get the root component of the owner/ attaches the box to it
+
+	//set relative location of the box to the component
+	BoxComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
+
+	
+	
+
 	// ...
 }
 
+
 void UCurrencyComponent::AddCurrency(int32 Amount)
 {
-	CurrentCurrency += Amount;//											adds the new amount to the current currency
+	CurrentCurrency += Amount;//adds the new amount to the current currency
 	FString stringResult = TEXT("");
 
 	stringResult = stringResult.Appendf(TEXT("Current Currency: %d") ,CurrentCurrency);
 	
 	UKismetSystemLibrary::PrintString(this, stringResult, true, false,
-		FColor::Red, 10, "AddedCurrency");//									prints the result to the screen
+		FColor::Red, 10, "AddedCurrency");//prints the result to the screen
 
 	
 
@@ -64,13 +78,74 @@ bool UCurrencyComponent::CanAfford(int32 Amount)
 	return true;
 }
 
+void UCurrencyComponent::Purchase(UObject* ObjectToBuy)
+{
+	//checks that the ObjectToBuy implments Costable interface. 
+	bool bIsImplemented = ObjectToBuy->GetClass()->ImplementsInterface(UICostable::StaticClass());
+	if (!bIsImplemented)
+	{
+		return;// if no, it returns
+	}
+	else
+	{
+		int32 Cost = IICostable::Execute_GetCost(ObjectToBuy);// calls the function that is implemented in obj
+		if (Cost < 0)
+			return;// if cost is less than 0, returns
+		else
+		{
+			SpendCurrency(Cost);// passes cost to the function of spendCurrncy
+		}
+	}
+}
+
 
 // Called when the game starts
 void UCurrencyComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//validates if owner exist, otherwise crash will happen
+	if (AActor* Owner = GetOwner())
+	{
+		BoxComponent = NewObject<UBoxComponent>(Owner); //creates an object and assign to box component
+		if (BoxComponent != nullptr){ //checks box component to be not null
+
+			BoxComponent->RegisterComponent();
+			BoxComponent->AttachToComponent(Owner->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+
+			BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &UCurrencyComponent::OverlapBegin);
+			BoxComponent->OnComponentEndOverlap.AddDynamic(this, &UCurrencyComponent::OverlapEnd);
+		}
+	}
+
 	// ...
+	
+}
+
+void UCurrencyComponent::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	//Checks for the implementation of the otherClass that is overlapped
+	//if implmented, tries to assign the Cost of the costable to a variable
+	//The variable passes to the SpendCurrency()
+	bool bIsImplmented = OtherActor->GetClass()->ImplementsInterface(UICostable::StaticClass()); 
+	if (bIsImplmented)
+	{
+		int32 Cost = IICostable::Execute_GetCost(OtherActor);
+		if (Cost < 0)
+		{
+			return;
+		}
+		else
+		{
+			SpendCurrency(Cost);
+		}
+	}
+}
+
+void UCurrencyComponent::OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
 	
 }
 
