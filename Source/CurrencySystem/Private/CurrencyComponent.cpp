@@ -56,7 +56,9 @@ void UCurrencyComponent::AddCurrency(int32 Amount)
 
 bool UCurrencyComponent::SpendCurrency(int32 Amount)
 {
-	if (CurrentCurrency <= 0)
+	//if current currency is less than 0 or the amount will causes current currency to be 0 return
+	//Note that some items can be free and be purchased while CurrentCurrency = 0
+	if (CurrentCurrency < 0 || CurrentCurrency - Amount < 0) 
 	{
 		return false;
 	}
