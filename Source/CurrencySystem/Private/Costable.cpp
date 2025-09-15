@@ -12,7 +12,6 @@ ACostable::ACostable()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 int32 ACostable::GetCost_Implementation()
@@ -26,7 +25,6 @@ int32 ACostable::GetCost_Implementation()
 void ACostable::BeginPlay()
 {
 	Super::BeginPlay();
-	Cost = 10;
 }
 
 
