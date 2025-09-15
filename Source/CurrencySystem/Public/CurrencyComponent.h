@@ -8,7 +8,8 @@
 
 class UBoxComponent;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FCurrencyChanged, float, CurrentCurrncy, float, DeltaAmount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FCurrencyChanged, float, CurrentCurrncy, float, DeltaAmount, bool,
+	isPositiveAmount);
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

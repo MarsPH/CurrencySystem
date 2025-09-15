@@ -40,7 +40,7 @@ void UCurrencyComponent::AddCurrency(int32 Amount)
 	UKismetSystemLibrary::PrintString(this, stringResult, true, false,
 		FColor::Red, 10, "AddedCurrency");//prints the result to the screen
 
-	OnCurrencyChanged.Broadcast(CurrentCurrency, Amount);// broadcasts current current
+	OnCurrencyChanged.Broadcast(CurrentCurrency, Amount, true);// broadcasts current current
 
 
 	//TArray<int32> MyCurrencies = {1, 2, 3, 3, 3, 1}; EDU: a way to write array
@@ -74,7 +74,7 @@ bool UCurrencyComponent::SpendCurrency(int32 Amount)
 		UKismetSystemLibrary::PrintString(this, stringResult, true, false,
 			FColor::Red, 10, "SpentCurrency");
 
-		OnCurrencyChanged.Broadcast(CurrentCurrency, Amount);// broadcasts current currency and deltaamount
+		OnCurrencyChanged.Broadcast(CurrentCurrency, Amount, false);// broadcasts current currency and deltaamount
 		return true;
 	}
 }
