@@ -8,6 +8,8 @@
 
 class UBoxComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCurrencyChanged, float, CurrentCurrncy);
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CURRENCYSYSTEM_API UCurrencyComponent : public UActorComponent
@@ -22,6 +24,10 @@ public:
 	int32 CurrentCurrency;
 	UPROPERTY(EditAnywhere)
 	int32 MaxCurrency;
+
+	UPROPERTY(BlueprintAssignable)
+	FCurrencyChanged OnCurrencyChanged;
+	
 	UFUNCTION(BlueprintCallable)
 	void AddCurrency(int32 Amount);
 	UFUNCTION(BlueprintCallable)
@@ -30,6 +36,7 @@ public:
 	bool CanAfford(int32 Amount);
 	UFUNCTION(BlueprintCallable)
 	void Purchase(UObject *ObjectToBuy);
+	
 	
 	UPROPERTY()
     	UBoxComponent* BoxComponent;
@@ -45,6 +52,7 @@ protected:
 	UFUNCTION()
 	void OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex); // OverlapEnd
+	
 
 public:	
 	// Called every frame

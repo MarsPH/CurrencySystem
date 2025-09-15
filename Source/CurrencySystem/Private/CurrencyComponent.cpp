@@ -72,6 +72,8 @@ bool UCurrencyComponent::SpendCurrency(int32 Amount)
 		
 		UKismetSystemLibrary::PrintString(this, stringResult, true, false,
 			FColor::Red, 10, "SpentCurrency");
+
+		OnCurrencyChanged.Broadcast(CurrentCurrency);// broadcasts current currenct
 		return true;
 	}
 }
