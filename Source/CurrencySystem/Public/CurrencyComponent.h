@@ -3,8 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../../../../../../../../Program Files/Epic Games/UE_5.6/Engine/Plugins/Editor/GameplayTagsEditor/Source/GameplayTagsEditor/Private/GameplayTagEditorUtilities.h"
 #include "Components/ActorComponent.h"
+//#include "GameplayTags.h"
+//#include "GameplayTagContainer.h"
 #include "CurrencyComponent.generated.h"
+
 
 class UBoxComponent;
 
@@ -37,6 +41,9 @@ public:
 	bool CanAfford(int32 Amount);
 	UFUNCTION(BlueprintCallable)
 	void Purchase(UObject *ObjectToBuy);
+
+	UPROPERTY(EditAnywhere)
+	TMap<FGameplayTag, int32> CurrencyBalances;
 	
 	
 	UPROPERTY()

@@ -23,7 +23,7 @@ UCurrencyComponent::UCurrencyComponent(): CurrentCurrency(0), MaxCurrency(0)
 	//set relative location of the box to the component
 	BoxComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
 
-	
+	//CurrencyBalances. = 0;
 	
 
 	// ...
@@ -122,6 +122,8 @@ void UCurrencyComponent::BeginPlay()
 			BoxComponent->OnComponentEndOverlap.AddDynamic(this, &UCurrencyComponent::OverlapEnd);
 		}
 	}
+
+	
 
 	// ...
 	
