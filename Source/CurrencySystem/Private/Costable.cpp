@@ -42,7 +42,8 @@ void ACostable::BeginPlay()
 	if (BoxComponent != nullptr){ //checks box component to be not null
 
 		BoxComponent->RegisterComponent();
-		BoxComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+		//box component cant attach to itself
+		//BoxComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 		BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &ACostable::OverlapBegin);// bind begin overlap
 		BoxComponent->OnComponentEndOverlap.AddDynamic(this, &ACostable::OverlapEnd);// bind end overlap
