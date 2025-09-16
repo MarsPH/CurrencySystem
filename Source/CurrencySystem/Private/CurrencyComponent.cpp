@@ -30,17 +30,17 @@ UCurrencyComponent::UCurrencyComponent(): CurrentCurrency(0), MaxCurrency(0)
 }
 
 
-void UCurrencyComponent::AddCurrency(int32 Amount)
+void UCurrencyComponent::AddCurrency(int32 Amount, FGameplayTag CurrencyType)
 {
-	CurrentCurrency += Amount;//adds the new amount to the current currency
+	CurrencyBalances[CurrencyType] += Amount;//adds the new amount to the current currency
 	FString stringResult = TEXT("");
 
-	stringResult = stringResult.Appendf(TEXT("Current Currency: %d") ,CurrentCurrency);
+	stringResult = stringResult.Appendf(TEXT("Current Currency: %d") ,CurrencyBalances[CurrencyType]);
 	
 	UKismetSystemLibrary::PrintString(this, stringResult, true, false,
 		FColor::Red, 10, "AddedCurrency");//prints the result to the screen
 
-	OnCurrencyChanged.Broadcast(CurrentCurrency, Amount, true);// broadcasts current current
+	OnCurrencyChanged.Broadcast(CurrencyBalances[CurrencyType], Amount, true, CurrencyType);// broadcasts current current
 
 
 	//TArray<int32> MyCurrencies = {1, 2, 3, 3, 3, 1}; EDU: a way to write array
@@ -55,26 +55,30 @@ void UCurrencyComponent::AddCurrency(int32 Amount)
 */	
 }
 
-bool UCurrencyComponent::SpendCurrency(int32 Amount)
+bool UCurrencyComponent::SpendCurrency(int32 Amount, FGameplayTag CurrencyType)
 {
 	//if current currency is less than 0 or the amount will causes current currency to be 0 return
 	//Note that some items can be free and be purchased while CurrentCurrency = 0
-	if (CurrentCurrency < 0 || CurrentCurrency - Amount < 0) 
+	if(!CurrencyType.IsValid())
+	{
+		return false;
+	}
+	if (CurrencyBalances[CurrencyType] < 0 || CurrencyBalances[CurrencyType] - Amount < 0) 
 	{
 		return false;
 	}
 	else
 	{
-		CurrentCurrency -= Amount;// reduces the currenct currency that is held
+		CurrencyBalances[CurrencyType] -= Amount;// reduces the currenct currency that is held
 
 		FString stringResult = TEXT(""); //assigns text that shows current currency to var
 
-		stringResult = stringResult.Appendf(TEXT("Current Currency: %d") ,CurrentCurrency);// appends resultString
+		stringResult = stringResult.Appendf(TEXT("Current Currency: %d") ,CurrencyBalances[CurrencyType]);// appends resultString
 		
 		UKismetSystemLibrary::PrintString(this, stringResult, true, false,
 			FColor::Red, 10, "SpentCurrency");
 
-		OnCurrencyChanged.Broadcast(CurrentCurrency, Amount, false);// broadcasts current currency and deltaamount
+		OnCurrencyChanged.Broadcast(CurrencyBalances[CurrencyType], Amount, false, CurrencyType);// broadcasts current currency and deltaamount
 		return true;
 	}
 }
@@ -94,11 +98,12 @@ void UCurrencyComponent::Purchase(UObject* ObjectToBuy)
 	else
 	{
 		int32 Cost = IICostable::Execute_GetCost(ObjectToBuy);// calls the function that is implemented in obj
+		FGameplayTag CurrencyCostType = IICostable::Execute_GetCostType(ObjectToBuy);
 		if (Cost < 0)
 			return;// if cost is less than 0, returns
 		else
 		{
-			SpendCurrency(Cost);// passes cost to the function of spendCurrncy
+			SpendCurrency(Cost,CurrencyCostType);// passes cost to the function of spendCurrncy
 		}
 	}
 }
@@ -122,11 +127,7 @@ void UCurrencyComponent::BeginPlay()
 			BoxComponent->OnComponentEndOverlap.AddDynamic(this, &UCurrencyComponent::OverlapEnd);
 		}
 	}
-
-	
-
 	// ...
-	
 }
 
 void UCurrencyComponent::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -135,19 +136,7 @@ void UCurrencyComponent::OverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 	//Checks for the implementation of the otherClass that is overlapped
 	//if implmented, tries to assign the Cost of the costable to a variable
 	//The variable passes to the SpendCurrency()
-	bool bIsImplmented = OtherActor->GetClass()->ImplementsInterface(UICostable::StaticClass()); 
-	if (bIsImplmented)
-	{
-		int32 Cost = IICostable::Execute_GetCost(OtherActor);
-		if (Cost < 0)
-		{
-			return;
-		}
-		else
-		{
-			SpendCurrency(Cost);
-		}
-	}
+	Purchase(OtherActor);
 }
 
 void UCurrencyComponent::OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UObject/Interface.h"
 #include "ICostable.generated.h"
 
@@ -24,4 +25,6 @@ class CURRENCYSYSTEM_API IICostable
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	int32 GetCost();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	FGameplayTag GetCostType();
 };

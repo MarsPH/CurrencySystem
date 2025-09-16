@@ -12,8 +12,8 @@
 
 class UBoxComponent;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FCurrencyChanged, float, CurrentCurrncy, float, DeltaAmount, bool,
-	isPositiveAmount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FCurrencyChanged, float, CurrentCurrncy, float, DeltaAmount, bool,
+	isPositiveAmount, FGameplayTag, CurrencyType);
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -34,9 +34,9 @@ public:
 	FCurrencyChanged OnCurrencyChanged;
 	
 	UFUNCTION(BlueprintCallable)
-	void AddCurrency(int32 Amount);
+	void AddCurrency(int32 Amount, FGameplayTag CurrencyType);
 	UFUNCTION(BlueprintCallable)
-	bool SpendCurrency(int32 Amount);
+	bool SpendCurrency(int32 Amount, FGameplayTag CurrencyType);
 	UFUNCTION(BlueprintCallable)
 	bool CanAfford(int32 Amount);
 	UFUNCTION(BlueprintCallable)

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "ICostable.h"
 #include "GameFramework/Actor.h"
 #include "ICostable.h"
@@ -22,9 +23,15 @@ class CURRENCYSYSTEM_API ACostable : public AActor, public IICostable
 public:	
 	// Sets default values for this actor's properties
 	ACostable();
-	virtual int32 GetCost_Implementation() override;; //overreding of the interface of ICOSTABLE
+	virtual int32 GetCost_Implementation() override; //overreding of the interface of ICOSTABLE
+
+	virtual FGameplayTag GetCostType_Implementation() override;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Cost;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayTag CostCurrencyType;
 
 	
 

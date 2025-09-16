@@ -4,6 +4,7 @@
 #include "Costable.h"
 
 #include "DiffUtils.h"
+#include "EditorCategoryUtils.h"
 #include "Chaos/Deformable/ChaosDeformableCollisionsProxy.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -20,8 +21,6 @@ ACostable::ACostable()
 	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(FName("WidgetComponent"));
 	WidgetComponent-> SetRelativeLocation(FVector(0, 0, 100));
 	
-
-
 }
 
 int32 ACostable::GetCost_Implementation()
@@ -29,6 +28,10 @@ int32 ACostable::GetCost_Implementation()
 	return Cost;
 }
 
+FGameplayTag ACostable::GetCostType_Implementation()
+{
+	return CostCurrencyType;
+}
 
 
 // Called when the game starts or when spawned
