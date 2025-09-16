@@ -6,9 +6,12 @@
 #include "ICostable.h"
 #include "GameFramework/Actor.h"
 #include "ICostable.h"
+#include "Components/WidgetComponent.h"
 
 #include "Costable.generated.h"
 class UBoxComponent;
+
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBoxOverlappedWithPlayer, int32, Cost);
 
 UCLASS()
 class CURRENCYSYSTEM_API ACostable : public AActor, public IICostable
@@ -22,9 +25,24 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Cost;
 
+	
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult); // overlapBegin
+
+	UFUNCTION()
+	void OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex); // OverlapEnd
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UBoxComponent* BoxComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UWidgetComponent* WidgetComponent;
 
 
 public:	
