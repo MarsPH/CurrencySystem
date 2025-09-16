@@ -6,6 +6,7 @@
 #include "ICostable.h"
 #include "GameFramework/Actor.h"
 #include "ICostable.h"
+#include "ICostDisplayable.h"
 #include "Components/WidgetComponent.h"
 
 #include "Costable.generated.h"
@@ -30,6 +31,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 
 	UFUNCTION()
 	void OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -38,6 +40,9 @@ protected:
 	UFUNCTION()
 	void OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex); // OverlapEnd
+
+	UFUNCTION()
+	void OnWidgetReady();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UBoxComponent* BoxComponent;

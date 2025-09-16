@@ -23,5 +23,5 @@ class CURRENCYSYSTEM_API IICostDisplayable
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	int32 SetCostToDisplay();
+	void SetCostToDisplay(int32 AmountToDisplay);
 };
