@@ -57,8 +57,8 @@ public:
 	void AddCurrency(int32 Amount, FGameplayTag CurrencyType);
 	UFUNCTION(BlueprintCallable)
 	bool SpendCurrency(int32 Amount, FGameplayTag CurrencyType);
-	UFUNCTION(BlueprintCallable)
-	bool CanAfford(int32 Amount);
+	//UFUNCTION(BlueprintCallable)
+	//bool CanAfford(int32 Amount);
 	UFUNCTION(BlueprintCallable)
 	void Purchase(UObject *ObjectToBuy);
 
@@ -77,14 +77,15 @@ protected:
 	UFUNCTION()
 	void OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult); // overlapBegin
-	UFUNCTION()
-	void OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex); // OverlapEnd
+
+	//UFUNCTION()
+	//void OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		//int32 OtherBodyIndex); // OverlapEnd
 	
 
 public:	
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	//virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 		
 };

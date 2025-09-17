@@ -1,5 +1,25 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+// =============================================================
+// CurrencyComponent.cpp
+//
+// Handles all currency logic for an Actor:
+//   • Stores balances per currency type
+//   • Provides Add / Spend / Query API
+//   • Supports purchase through ICostable interface
+//   • Manages collision box for auto-purchase overlaps
+//
+// Organization of this file:
+//   1. Constructor & Initialization
+//   2. Unreal Lifecycle (BeginPlay, Tick)
+//   3. Currency Management (Add, Spend, CanAfford)
+//   4. Purchase Logic (using ICostable)
+//   5. Collision Handling (Begin/End overlap)
+//
+// Notes:
+//   - Debug output uses PrintString, standardized colors
+//   - Tick can be disabled if not required
+//   - BoxComponent is created at runtime and attached to Owner
+// =============================================================
 
 #include "CurrencyComponent.h"
 
@@ -9,6 +29,10 @@
 #include "Components/TimelineComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
+// =============================================================
+// Constructor & Initialization
+// =============================================================
+
 // Sets default values for this component's properties
 UCurrencyComponent::UCurrencyComponent(): CurrentCurrency(0), MaxCurrency(0)
 {
@@ -17,48 +41,56 @@ UCurrencyComponent::UCurrencyComponent(): CurrentCurrency(0), MaxCurrency(0)
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	BoxComponent = CreateDefaultSubobject<UBoxComponent>(FName("BoxComponent")); //Assigning an subobject of box comp
+	//A box component to be created, to manages the overlap
+	BoxComponent = CreateDefaultSubobject<UBoxComponent>(FName("BoxComponent"));
+	//setting the box extent bigger than the player for an easier feedback
+	
 	BoxComponent->SetBoxExtent(FVector(74.0f, 125.0f, 100.0f));
 	//get the root component of the owner/ attaches the box to it
 
-	//set relative location of the box to the component
+	//set relative location of the box to the component, so the half of the box is not in the ground
 	BoxComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
-
-	//CurrencyBalances. = 0;
 	
-
-	// ...
 }
 
+// Called when the game starts
+void UCurrencyComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	//validates if owner exist, otherwise crash will happen
+	if (AActor* Owner = GetOwner())
+	{
+		BoxComponent = NewObject<UBoxComponent>(Owner); //creates an object and assign to box component
+		if (BoxComponent != nullptr){ //checks box component to be not null
+
+			BoxComponent->RegisterComponent();
+			//attach to the root so it won't just goof around in the spawning point
+			BoxComponent->AttachToComponent(Owner->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+			//binds the begin overlap function with the overlap event, so when overlap happens the function fires
+			BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &UCurrencyComponent::OverlapBegin);
+		}
+	}
+
+}
+
+// =============================================================
+// Currency Management
+// =============================================================
 
 void UCurrencyComponent::AddCurrency(int32 Amount, FGameplayTag CurrencyType)
 {
-	CurrencyBalances[CurrencyType] += Amount;//adds the new amount to the current currency
-	FString stringResult = TEXT("");
+	//adds the new amount to the current currency with its key, so that amount can be updated accordingly
+	CurrencyBalances[CurrencyType] += Amount;
 
-	stringResult = stringResult.Appendf(TEXT("Current Currency: %d") ,CurrencyBalances[CurrencyType]);
-	
-	UKismetSystemLibrary::PrintString(this, stringResult, true, false,
-		FColor::Red, 10, "AddedCurrency");//prints the result to the screen
-
-	OnCurrencyChanged.Broadcast(CurrencyBalances[CurrencyType], Amount, true, CurrencyType);// broadcasts current current
-
-
-	//TArray<int32> MyCurrencies = {1, 2, 3, 3, 3, 1}; EDU: a way to write array
-/*   
-	FString stringResult = TEXT("")
-	for (int i = 0; i < MyCurrencies.Num(); i++)
-	{
-		stringResult = stringResult.Appendf(TEXT("Number_%d: %d, "), i + 1, MyCurrencies[i]);
-	}
-	
-	UKismetSystemLibrary::PrintString(this, stringResult, true, false, FColor::Red, 10, "Currency");
-*/	
+	// broadcasts current, so the ui can notice the currency change, and updates it
+	OnCurrencyChanged.Broadcast(CurrencyBalances[CurrencyType], Amount,
+		true, CurrencyType);
 }
 
 bool UCurrencyComponent::SpendCurrency(int32 Amount, FGameplayTag CurrencyType)
 {
-	//if current currency is less than 0 or the amount will causes current currency to be 0 return
+	//if current currency is less than 0 or the amount will cause current currency to be 0 return
 	//Note that some items can be free and be purchased while CurrentCurrency = 0
 	if(!CurrencyType.IsValid())
 	{
@@ -66,27 +98,21 @@ bool UCurrencyComponent::SpendCurrency(int32 Amount, FGameplayTag CurrencyType)
 	}
 	if (CurrencyBalances[CurrencyType] < 0 || CurrencyBalances[CurrencyType] - Amount < 0) 
 	{
-		return false;
+		return false; //if the current amount held or be held will be less than 0, then won't let the spending happen
 	}
 	else
 	{
-		CurrencyBalances[CurrencyType] -= Amount;// reduces the currenct currency that is held
+		CurrencyBalances[CurrencyType] -= Amount;// reduces the currenct currency that is held, so spending happens
 
-		FString stringResult = TEXT(""); //assigns text that shows current currency to var
-
-		stringResult = stringResult.Appendf(TEXT("Current Currency: %d") ,CurrencyBalances[CurrencyType]);// appends resultString
-		
-		UKismetSystemLibrary::PrintString(this, stringResult, true, false,
-			FColor::Red, 10, "SpentCurrency");
-
-		OnCurrencyChanged.Broadcast(CurrencyBalances[CurrencyType], Amount, false, CurrencyType);// broadcasts current currency and deltaamount
+		OnCurrencyChanged.Broadcast(CurrencyBalances[CurrencyType], Amount, false,
+			CurrencyType);// broadcasts current currency and deltaAmount, so UI can update
 		return true;
 	}
 }
-bool UCurrencyComponent::CanAfford(int32 Amount)
-{
-	return true;
-}
+
+// =============================================================
+// Purchase Logic
+// =============================================================
 
 void UCurrencyComponent::Purchase(UObject* ObjectToBuy)
 {
@@ -104,35 +130,18 @@ void UCurrencyComponent::Purchase(UObject* ObjectToBuy)
 			return;// if cost is less than 0, returns
 		else
 		{
-			SpendCurrency(Cost,CurrencyCostType);// passes cost to the function of spendCurrncy
+			SpendCurrency(Cost,CurrencyCostType);// passes cost to the function of spendCurrnecy
 		}
 	}
 }
 
 
-// Called when the game starts
-void UCurrencyComponent::BeginPlay()
-{
-	Super::BeginPlay();
 
-	//validates if owner exist, otherwise crash will happen
-	if (AActor* Owner = GetOwner())
-	{
-		BoxComponent = NewObject<UBoxComponent>(Owner); //creates an object and assign to box component
-		if (BoxComponent != nullptr){ //checks box component to be not null
+// =============================================================
+// Collision Handling
+// =============================================================
 
-			BoxComponent->RegisterComponent();
-			BoxComponent->AttachToComponent(Owner->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-
-			BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &UCurrencyComponent::OverlapBegin);
-			BoxComponent->OnComponentEndOverlap.AddDynamic(this, &UCurrencyComponent::OverlapEnd);
-		}
-	}
-
-	
-	// ...
-}
-
+//Overlap function to get a reference to an actor which demands/gives currency.
 void UCurrencyComponent::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -140,24 +149,9 @@ void UCurrencyComponent::OverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 	//if implmented, tries to assign the Cost of the costable to a variable
 	//The variable passes to the SpendCurrency()
 	Purchase(OtherActor);
-	UKismetSystemLibrary::PrintString(this, OtherActor->GetName(), true, false,
-			FColor::Blue, 10);
-	UKismetSystemLibrary::PrintString(this, OtherActor->GetName(), true, false,
-			FColor::Blue, 10);
 }
 
-void UCurrencyComponent::OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	
-}
-
-
-// Called every frame
-void UCurrencyComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
-
+/*	
+		UKismetSystemLibrary::PrintString(this, stringResult, true, false,
+			FColor::Red, 10, "SpentCurrency");
+*/
