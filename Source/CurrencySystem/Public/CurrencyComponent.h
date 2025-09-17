@@ -9,12 +9,26 @@
 //#include "GameplayTagContainer.h"
 #include "CurrencyComponent.generated.h"
 
-
 class UBoxComponent;
+
+
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FCurrencyChanged, float, CurrentCurrncy, float, DeltaAmount, bool,
 	isPositiveAmount, FGameplayTag, CurrencyType);
 
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCurrencyBalancesInitialized , TArray<FCurrencyEntry>, CurrencyEntries);
+
+USTRUCT(BlueprintType)
+struct FCurrencyEntry
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayTag Tag;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Balance;
+};
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CURRENCYSYSTEM_API UCurrencyComponent : public UActorComponent
@@ -30,8 +44,14 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 MaxCurrency;
 
+	UPROPERTY(EditAnywhere)
+	TArray<FCurrencyEntry> CurrencyBalancesArray;
+
 	UPROPERTY(BlueprintAssignable)
 	FCurrencyChanged OnCurrencyChanged;
+
+	//UPROPERTY(BlueprintAssignable)
+	//FOnCurrencyBalancesInitialized OnCurrencyBalancesInitialized;
 	
 	UFUNCTION(BlueprintCallable)
 	void AddCurrency(int32 Amount, FGameplayTag CurrencyType);
@@ -42,7 +62,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Purchase(UObject *ObjectToBuy);
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<FGameplayTag, int32> CurrencyBalances;
 	
 	

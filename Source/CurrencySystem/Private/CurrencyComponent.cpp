@@ -6,6 +6,7 @@
 #include "ICostable.h"
 #include "MovieSceneTracksComponentTypes.h"
 #include "Components/BoxComponent.h"
+#include "Components/TimelineComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values for this component's properties
@@ -44,7 +45,7 @@ void UCurrencyComponent::AddCurrency(int32 Amount, FGameplayTag CurrencyType)
 
 
 	//TArray<int32> MyCurrencies = {1, 2, 3, 3, 3, 1}; EDU: a way to write array
-/*
+/*   
 	FString stringResult = TEXT("")
 	for (int i = 0; i < MyCurrencies.Num(); i++)
 	{
@@ -127,6 +128,8 @@ void UCurrencyComponent::BeginPlay()
 			BoxComponent->OnComponentEndOverlap.AddDynamic(this, &UCurrencyComponent::OverlapEnd);
 		}
 	}
+
+	
 	// ...
 }
 
