@@ -13,6 +13,19 @@ class UBoxComponent;
 
 
 
+// =============================================================
+// Delegate: FCurrencyChanged
+//
+// Broadcasts whenever a currency balance changes.
+// Parameters:
+//   • CurrentCurrency   – the new total after the change
+//   • DeltaAmount       – how much was added or spent
+//   • isPositiveAmount  – true if currency was gained, false if spent
+//   • CurrencyType      – the type of currency affected
+//
+// Typical use cases:
+//   • Updating UI displays
+//   • Triggering gameplay reactions when currency changes
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FCurrencyChanged, float, CurrentCurrncy, float, DeltaAmount, bool,
 	isPositiveAmount, FGameplayTag, CurrencyType);
 
