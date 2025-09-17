@@ -44,12 +44,12 @@ void ACostable::BeginPlay()
 	//BoxComponent = NewObject<UBoxComponent>(RootComponent); //creates an object and assign to box component
 	if (BoxComponent != nullptr){ //checks box component to be not null
 
-		BoxComponent->RegisterComponent();
+		//BoxComponent->RegisterComponent();
 		//box component cant attach to itself
 		//BoxComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
-		BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &ACostable::OverlapBegin);// bind begin overlap
-		BoxComponent->OnComponentEndOverlap.AddDynamic(this, &ACostable::OverlapEnd);// bind end overlap
+		//BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &ACostable::OverlapBegin);// bind begin overlap
+		//BoxComponent->OnComponentEndOverlap.AddDynamic(this, &ACostable::OverlapEnd);// bind end overlap
 	}
 
 	//WidgetComponent = NewObject<UWidgetComponent>(RootComponent);

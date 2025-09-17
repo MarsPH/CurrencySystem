@@ -140,6 +140,10 @@ void UCurrencyComponent::OverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 	//if implmented, tries to assign the Cost of the costable to a variable
 	//The variable passes to the SpendCurrency()
 	Purchase(OtherActor);
+	UKismetSystemLibrary::PrintString(this, OtherActor->GetName(), true, false,
+			FColor::Blue, 10);
+	UKismetSystemLibrary::PrintString(this, OtherActor->GetName(), true, false,
+			FColor::Blue, 10);
 }
 
 void UCurrencyComponent::OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
