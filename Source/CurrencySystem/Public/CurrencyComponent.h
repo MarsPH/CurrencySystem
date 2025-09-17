@@ -36,39 +36,64 @@ class CURRENCYSYSTEM_API UCurrencyComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
+	// =============================================================
+	// Constructor
+	// =============================================================
+
 	// Sets default values for this component's properties
 	UCurrencyComponent();
 
+	// =============================================================
+	// Currency Data
+	// =============================================================
+
 	UPROPERTY(EditAnywhere)
 	int32 CurrentCurrency;
+
 	UPROPERTY(EditAnywhere)
 	int32 MaxCurrency;
 
+	// Array-based representation of balances (alternative to TMap)
 	UPROPERTY(EditAnywhere)
 	TArray<FCurrencyEntry> CurrencyBalancesArray;
+
+	// Map-based representation of balances: CurrencyType → Amount
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FGameplayTag, int32> CurrencyBalances;
+
+	// =============================================================
+	// Delegates & Events
+	// =============================================================
 
 	UPROPERTY(BlueprintAssignable)
 	FCurrencyChanged OnCurrencyChanged;
 
+	// Placeholder for array initialization event (not used yet)
 	//UPROPERTY(BlueprintAssignable)
 	//FOnCurrencyBalancesInitialized OnCurrencyBalancesInitialized;
-	
-	UFUNCTION(BlueprintCallable)
+
+	// =============================================================
+	// Public API
+	// =============================================================
+
+	UFUNCTION(BlueprintCallable, Category="Currency|Management")
 	void AddCurrency(int32 Amount, FGameplayTag CurrencyType);
-	UFUNCTION(BlueprintCallable)
+
+	UFUNCTION(BlueprintCallable, Category="Currency|Management")
 	bool SpendCurrency(int32 Amount, FGameplayTag CurrencyType);
+
 	//UFUNCTION(BlueprintCallable)
 	//bool CanAfford(int32 Amount);
-	UFUNCTION(BlueprintCallable)
-	void Purchase(UObject *ObjectToBuy);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<FGameplayTag, int32> CurrencyBalances;
-	
-	
+	UFUNCTION(BlueprintCallable, Category="Currency|Purchase")
+	void Purchase(UObject* ObjectToBuy);
+
+	// =============================================================
+	// Collision
+	// =============================================================
+
 	UPROPERTY()
-    	UBoxComponent* BoxComponent;
-	
+	UBoxComponent* BoxComponent;
 
 protected:
 	// Called when the game starts
