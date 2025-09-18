@@ -25,12 +25,12 @@ ACostable::ACostable()
 
 int32 ACostable::GetCost_Implementation()
 {
-	return Cost;
+	return Cost; // not used only in UI
 }
 
-FGameplayTag ACostable::GetCostType_Implementation()
+TMap<FGameplayTag, int> ACostable::GetCostBundle_Implementation()
 {
-	return CostCurrencyType;
+	return CostBundle;//returns the cost bundle of this costable
 }
 
 

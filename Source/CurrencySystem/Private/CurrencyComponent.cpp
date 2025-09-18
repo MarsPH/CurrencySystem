@@ -131,12 +131,13 @@ void UCurrencyComponent::Purchase(UObject* ObjectToBuy)
 	else
 	{
 		int32 Cost = IICostable::Execute_GetCost(ObjectToBuy);// calls the function that is implemented in obj
-		FGameplayTag CurrencyCostType = IICostable::Execute_GetCostType(ObjectToBuy);
+		TMap<FGameplayTag, int> CostBundle = IICostable::Execute_GetCostBundle(ObjectToBuy);
+		//FGameplayTag CurrencyCostType = IICostable::Execute_GetCostType(ObjectToBuy);
 		if (Cost < 0)
 			return;// if cost is less than 0, returns
 		else
 		{
-			//SpendCurrency(Cost,CurrencyCostType);// passes cost to the function of spendCurrnecy
+			ApplyTransaction(CostBundle);// passes cost to the function of spendCurrnecy
 		}
 	}
 }
