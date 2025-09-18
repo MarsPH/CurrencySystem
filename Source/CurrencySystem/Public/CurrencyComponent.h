@@ -93,7 +93,7 @@ public:
 	void AddCurrency(int32 Amount, FGameplayTag CurrencyType);
 
 	UFUNCTION(BlueprintCallable, Category="Currency|Management")
-	bool SpendCurrency(int32 Amount, FGameplayTag CurrencyType);
+	bool ApplyTransaction(TMap<FGameplayTag, int> CurrencyTags);
 
 	//UFUNCTION(BlueprintCallable)
 	//bool CanAfford(int32 Amount);

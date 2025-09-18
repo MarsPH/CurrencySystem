@@ -88,26 +88,32 @@ void UCurrencyComponent::AddCurrency(int32 Amount, FGameplayTag CurrencyType)
 		true, CurrencyType);
 }
 
-bool UCurrencyComponent::SpendCurrency(int32 Amount, FGameplayTag CurrencyType)
+bool UCurrencyComponent::ApplyTransaction(TMap<FGameplayTag, int> CostBundle)
 {
 	//if current currency is less than 0 or the amount will cause current currency to be 0 return
 	//Note that some items can be free and be purchased while CurrentCurrency = 0
-	if(!CurrencyType.IsValid())
-	{
-		return false;
-	}
-	if (CurrencyBalances[CurrencyType] < 0 || CurrencyBalances[CurrencyType] - Amount < 0) 
-	{
-		return false; //if the current amount held or be held will be less than 0, then won't let the spending happen
-	}
-	else
-	{
-		CurrencyBalances[CurrencyType] -= Amount;// reduces the currenct currency that is held, so spending happens
 
-		OnCurrencyChanged.Broadcast(CurrencyBalances[CurrencyType], Amount, false,
-			CurrencyType);// broadcasts current currency and deltaAmount, so UI can update
-		return true;
+	for (const TPair<FGameplayTag, int>& Entry : CostBundle)
+	{
+		FGameplayTag CurrencyType = Entry.Key;
+		int32 CostAmount = Entry.Value;
+
+		if (CurrencyBalances[CurrencyType] + CostAmount < 0) 
+		{
+			return false; //if the current amount held or be held will be less than 0, then won't let the spending happen
+		}
 	}
+
+	for (const TPair<FGameplayTag, int>& Entry : CostBundle)
+	{
+		FGameplayTag CurrencyType = Entry.Key;
+		int32 CostAmount = Entry.Value;
+
+		CurrencyBalances[CurrencyType] += CostAmount;// reduces the currenct currency that is held, so spending happens
+		OnCurrencyChanged.Broadcast(CurrencyBalances[CurrencyType], CostAmount, false,
+			CurrencyType);// broadcasts current currency and deltaAmount, so UI can update
+	}
+	return true;
 }
 
 // =============================================================
@@ -130,7 +136,7 @@ void UCurrencyComponent::Purchase(UObject* ObjectToBuy)
 			return;// if cost is less than 0, returns
 		else
 		{
-			SpendCurrency(Cost,CurrencyCostType);// passes cost to the function of spendCurrnecy
+			//SpendCurrency(Cost,CurrencyCostType);// passes cost to the function of spendCurrnecy
 		}
 	}
 }
