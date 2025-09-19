@@ -19,7 +19,6 @@ ACostable::ACostable()
 	BoxComponent->SetBoxExtent(FVector(150.0f, 150.0f, 150.0f));
 	
 	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(FName("WidgetComponent"));
-	WidgetComponent-> SetRelativeLocation(FVector(0, 0, 100));
 	
 }
 
@@ -57,6 +56,8 @@ void ACostable::BeginPlay()
 	{
 		WidgetComponent->RegisterComponent();//creates the physical state
 		WidgetComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+		WidgetComponent-> SetRelativeLocation(FVector(0, -85,0 ));
+
 		//WidgetComponent->SetHiddenInGame(true);//it only is visible under conditions
 	}
 	if (WidgetComponent)
