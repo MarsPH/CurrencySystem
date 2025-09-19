@@ -25,10 +25,10 @@ public:
 	ACostable();
 	virtual int32 GetCost_Implementation() override; //overreding of the interface of ICOSTABLE
 
-	virtual TMap<FGameplayTag, int> GetCostBundle_Implementation() override;// to return the cost bundle in the interface
+	virtual TMap<FGameplayTag, int32> GetCostBundle_Implementation() override;// to return the cost bundle in the interface
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	TMap<FGameplayTag, int> CostBundle;// instead of a single cost there is a cost bundle map now
+	TMap<FGameplayTag, int32> CostBundle;// instead of a single cost there is a cost bundle map now
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Cost;// this is not used anymore, other than the UI TBD

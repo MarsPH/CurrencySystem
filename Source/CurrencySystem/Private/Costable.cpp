@@ -28,7 +28,7 @@ int32 ACostable::GetCost_Implementation()
 	return Cost; // not used only in UI
 }
 
-TMap<FGameplayTag, int> ACostable::GetCostBundle_Implementation()
+TMap<FGameplayTag, int32> ACostable::GetCostBundle_Implementation()
 {
 	return CostBundle;//returns the cost bundle of this costable
 }
@@ -65,8 +65,8 @@ void ACostable::BeginPlay()
 		{
 			if (Widget->GetClass()->ImplementsInterface(UICostDisplayable::StaticClass()))
 			{
-				IICostDisplayable::Execute_SetCostToDisplay(WidgetComponent->GetUserWidgetObject(), CostBundle);
-				UKismetSystemLibrary::PrintString(this, WidgetComponent->GetName());
+				IICostDisplayable::Execute_SetCostToDisplay(Widget, CostBundle);
+				UKismetSystemLibrary::PrintString(this, Widget->GetName());
 			}
 		}
 	}

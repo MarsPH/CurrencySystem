@@ -22,6 +22,6 @@ class CURRENCYSYSTEM_API IICostDisplayable
 	
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void SetCostToDisplay(TMap<FGameplayTag, int32> CostBundle);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Cost System")
+	void SetCostToDisplay(const TMap<FGameplayTag, int32>& CostBundle);
 };

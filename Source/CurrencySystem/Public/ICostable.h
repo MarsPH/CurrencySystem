@@ -26,5 +26,5 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	int32 GetCost();
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	TMap<FGameplayTag, int> GetCostBundle(); // a map of costs, and keys to be passed to the currency component
+	TMap<FGameplayTag, int32> GetCostBundle(); // a map of costs, and keys to be passed to the currency component
 };
