@@ -65,7 +65,7 @@ void ACostable::BeginPlay()
 		{
 			if (Widget->GetClass()->ImplementsInterface(UICostDisplayable::StaticClass()))
 			{
-				IICostDisplayable::Execute_SetCostToDisplay(WidgetComponent->GetUserWidgetObject(), Cost);
+				IICostDisplayable::Execute_SetCostToDisplay(WidgetComponent->GetUserWidgetObject(), CostBundle);
 				UKismetSystemLibrary::PrintString(this, WidgetComponent->GetName());
 			}
 		}
