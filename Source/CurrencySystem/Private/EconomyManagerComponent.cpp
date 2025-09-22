@@ -18,7 +18,7 @@ UEconomyManagerComponent::UEconomyManagerComponent()
 void UEconomyManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	// ...
 	
 }

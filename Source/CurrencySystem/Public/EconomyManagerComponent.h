@@ -18,7 +18,7 @@ public:
 	// Sets default values for this component's properties
 	UEconomyManagerComponent();
 	UPROPERTY(editAnywhere, BlueprintReadWrite)
-	TArray<UPassiveCostComponent*> PassiveSources; //to store the passive soruces
+	TArray<TScriptInterface<IPassiveIncomeSource>> PassiveSources; //to store the passive soruces
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FTimerHandle EconomyTickTimer;// how often the passive tick should be done
@@ -28,6 +28,16 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCurrencyComponent* CurrencyComponent;
+
+	UFUNCTION(BlueprintCallable)
+	void RegisterSource(TScriptInterface<IPassiveIncomeSource> Source);
+
+	UFUNCTION(BlueprintCallable)
+	void UnRegisterSource(TScriptInterface<IPassiveIncomeSource> Source);
+
+	UFUNCTION(BlueprintCallable)
+	void TickEconomy();
+	
 
 protected:
 	// Called when the game starts
