@@ -3,28 +3,31 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EconomyManagerComponent.h"
-#include "GameplayTagContainer.h"
+#include "CurrencyComponent.h"
+#include "PassiveCostComponent.h"
 #include "Components/ActorComponent.h"
-#include "PassiveCostComponent.generated.h"
+#include "EconomyManagerComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class CURRENCYSYSTEM_API UPassiveCostComponent : public UActorComponent
+class CURRENCYSYSTEM_API UEconomyManagerComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UPassiveCostComponent();
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<FGameplayTag, int> PassiveCostBundle;
+	UEconomyManagerComponent();
+	UPROPERTY(editAnywhere, BlueprintReadWrite)
+	TArray<UPassiveCostComponent*> PassiveSources; //to store the passive soruces
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Interval;
+	FTimerHandle EconomyTickTimer;// how often the passive tick should be done
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float GlobalInterval;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UEconomyManagerComponent* EconomyManager;
+	UCurrencyComponent* CurrencyComponent;
 
 protected:
 	// Called when the game starts
