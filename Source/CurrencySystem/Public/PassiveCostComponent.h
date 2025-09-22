@@ -5,12 +5,13 @@
 #include "CoreMinimal.h"
 #include "EconomyManagerComponent.h"
 #include "GameplayTagContainer.h"
+#include "PassiveIncomeSource.h"
 #include "Components/ActorComponent.h"
 #include "PassiveCostComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class CURRENCYSYSTEM_API UPassiveCostComponent : public UActorComponent
+class CURRENCYSYSTEM_API UPassiveCostComponent : public UActorComponent, public IPassiveIncomeSource
 {
 	GENERATED_BODY()
 
@@ -25,6 +26,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UEconomyManagerComponent* EconomyManager;
+
+	virtual TMap<FGameplayTag, int> GetIncomeBundles_Implementation __override();
+
+	virtual float GetInterval_Implementation() __override;
+
+	virtual bool IsActive_Implementation() __override;
 
 protected:
 	// Called when the game starts

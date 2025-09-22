@@ -14,6 +14,21 @@ UPassiveCostComponent::UPassiveCostComponent()
 }
 
 
+TMap<FGameplayTag, int> UPassiveCostComponent::GetIncomeBundles_Implementation()
+{
+	return PassiveCostBundle;
+}
+
+float UPassiveCostComponent::GetInterval_Implementation()
+{
+	return Interval;
+}
+
+bool UPassiveCostComponent::IsActive_Implementation()
+{
+	return true;
+}
+
 // Called when the game starts
 void UPassiveCostComponent::BeginPlay()
 {
