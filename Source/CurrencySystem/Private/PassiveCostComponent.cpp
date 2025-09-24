@@ -33,7 +33,8 @@ bool UPassiveCostComponent::IsActive_Implementation()
 void UPassiveCostComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	EconomyManager->RegisterSource(this); //it register itself for now in begin play with economy manager
 
 	// ...
 	

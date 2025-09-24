@@ -32,8 +32,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RegisterSource(TScriptInterface<IPassiveIncomeSource> Source);
 
-	UFUNCTION(BlueprintCallable)
-	void UnRegisterSource(TScriptInterface<IPassiveIncomeSource> Source);
+	//UFUNCTION(BlueprintCallable)
+	//void UnRegisterSource(TScriptInterface<IPassiveIncomeSource> Source);
 
 	UFUNCTION(BlueprintCallable)
 	void TickEconomy();
