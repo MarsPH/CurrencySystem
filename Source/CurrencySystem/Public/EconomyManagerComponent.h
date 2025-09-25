@@ -3,8 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CurrencyComponent.h"
-#include "PassiveCostComponent.h"
 #include "Components/ActorComponent.h"
 #include "EconomyManagerComponent.generated.h"
 
@@ -26,8 +24,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float GlobalInterval;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UCurrencyComponent* CurrencyComponent;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//UCurrencyComponent* CurrencyComponent;
 
 	UFUNCTION(BlueprintCallable)
 	void RegisterSource(TScriptInterface<IPassiveIncomeSource> Source);

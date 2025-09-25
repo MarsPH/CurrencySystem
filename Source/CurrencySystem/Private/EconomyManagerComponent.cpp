@@ -14,11 +14,27 @@ UEconomyManagerComponent::UEconomyManagerComponent()
 }
 
 
+void UEconomyManagerComponent::RegisterSource(TScriptInterface<IPassiveIncomeSource> Source)
+{
+	PassiveSources.Add(Source);
+}
+
+void UEconomyManagerComponent::TickEconomy()
+{
+	
+}
+
 // Called when the game starts
 void UEconomyManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	GetWorld()->GetTimerManager().SetTimer(
+	EconomyTickTimer,  // the handle
+	this, // object that owns the function
+	&UEconomyManagerComponent::TickEconomy, // function pointer
+	GlobalInterval, // time in seconds
+	true // looping?
+	);
 	// ...
 	
 }
