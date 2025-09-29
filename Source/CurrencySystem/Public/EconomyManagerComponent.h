@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CurrencyComponent.h"
 #include "Components/ActorComponent.h"
 #include "EconomyManagerComponent.generated.h"
 
@@ -20,12 +21,14 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FTimerHandle EconomyTickTimer;// how often the passive tick should be done
+
+	TMap<TScriptInterface<IPassiveIncomeSource>, float> ElapsedTimeMap; // to store the elapsed time of each source
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float GlobalInterval;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	//UCurrencyComponent* CurrencyComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCurrencyComponent* CurrencyComponent;
 
 	UFUNCTION(BlueprintCallable)
 	void RegisterSource(TScriptInterface<IPassiveIncomeSource> Source);

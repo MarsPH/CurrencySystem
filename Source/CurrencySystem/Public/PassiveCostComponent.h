@@ -31,7 +31,7 @@ public:
 
 	virtual float GetInterval_Implementation() __override;
 
-	virtual bool IsActive_Implementation() __override;
+	virtual bool IsActive_Implementation() const __override;
 
 protected:
 	// Called when the game starts

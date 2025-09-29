@@ -24,10 +24,11 @@ float UPassiveCostComponent::GetInterval_Implementation()
 	return Interval;
 }
 
-bool UPassiveCostComponent::IsActive_Implementation()
+bool UPassiveCostComponent::IsActive_Implementation() const
 {
 	return true;
 }
+
 
 // Called when the game starts
 void UPassiveCostComponent::BeginPlay()
