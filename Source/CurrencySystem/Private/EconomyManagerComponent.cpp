@@ -22,6 +22,11 @@ UEconomyManagerComponent::UEconomyManagerComponent()
 
 void UEconomyManagerComponent::RegisterSource(TScriptInterface<IPassiveIncomeSource> Source)
 {
+	if (!Source)
+	{
+		UE_LOG(LogTemp, Error, TEXT("EconomyManager is null in %s"), *GetOwner()->GetName());
+		return;
+	}
 	PassiveSources.Add(Source);
 }
 

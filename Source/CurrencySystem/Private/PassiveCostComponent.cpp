@@ -34,9 +34,17 @@ bool UPassiveCostComponent::IsActive_Implementation() const
 void UPassiveCostComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	EconomyManager->RegisterSource(this); //it register itself for now in begin play with economy manager
-
+	if (AActor* Owner = GetOwner())
+	{
+		if (UEconomyManagerComponent* Manager = Owner->FindComponentByClass<UEconomyManagerComponent>())
+		{
+			Manager->RegisterSource(this);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("EconomyManager is null in %s"), *GetOwner()->GetName());
+	}
 	// ...
 	
 }
