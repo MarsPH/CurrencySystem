@@ -27,11 +27,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UEconomyManagerComponent* EconomyManager;
 
-	virtual TMap<FGameplayTag, int> GetIncomeBundles_Implementation __override();
+	virtual TMap<FGameplayTag, int> GetIncomeBundles_Implementation() override;
 
-	virtual float GetInterval_Implementation() __override;
+	virtual float GetInterval_Implementation() override;
 
-	virtual bool IsActive_Implementation() const __override;
+	virtual bool IsActive_Implementation() override;
 
 protected:
 	// Called when the game starts

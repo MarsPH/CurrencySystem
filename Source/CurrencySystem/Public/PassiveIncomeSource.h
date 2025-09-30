@@ -24,11 +24,11 @@ class CURRENCYSYSTEM_API IPassiveIncomeSource
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	TMap<FGameplayTag, int32> GetIncomeBundles() const;
+	TMap<FGameplayTag, int32> GetIncomeBundles();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	float GetInterval() const;
+	float GetInterval();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	bool IsActive() const;
+	bool IsActive();
 };

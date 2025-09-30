@@ -16,6 +16,16 @@ UPassiveCostComponent::UPassiveCostComponent()
 
 TMap<FGameplayTag, int> UPassiveCostComponent::GetIncomeBundles_Implementation()
 {
+	UE_LOG(LogTemp, Warning, TEXT("[%s] PassiveCostBundle.Num() = %d"),
+	   *GetOwner()->GetName(),
+	   PassiveCostBundle.Num());
+
+	for (const auto& Elem : PassiveCostBundle)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("   Tag: %s  Amount: %d"),
+			*Elem.Key.ToString(), Elem.Value);
+	}
+
 	return PassiveCostBundle;
 }
 
@@ -24,27 +34,30 @@ float UPassiveCostComponent::GetInterval_Implementation()
 	return Interval;
 }
 
-bool UPassiveCostComponent::IsActive_Implementation() const
+bool UPassiveCostComponent::IsActive_Implementation()
 {
 	return true;
 }
-
 
 // Called when the game starts
 void UPassiveCostComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	if (AActor* Owner = GetOwner())
+	if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
 	{
-		if (UEconomyManagerComponent* Manager = Owner->FindComponentByClass<UEconomyManagerComponent>())
+		if (APawn* Pawn = PC->GetPawn())
 		{
-			Manager->RegisterSource(this);
+			if (UEconomyManagerComponent* Manager = Pawn->FindComponentByClass<UEconomyManagerComponent>())
+			{
+				Manager->RegisterSource(this);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Error, TEXT("No EconomyManagerComponent found on Player Pawn!"));
+			}
 		}
 	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("EconomyManager is null in %s"), *GetOwner()->GetName());
-	}
+
 	// ...
 	
 }

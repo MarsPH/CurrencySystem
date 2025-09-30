@@ -1,10 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "EconomyManagerComponent.h"
 
 #include "CurrencyComponent.h"
-#include "FunctionalUIScreenshotTest.h"
+#include "PassiveCostComponent.h"
 #include "PassiveIncomeSource.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
@@ -12,85 +9,105 @@
 // Sets default values for this component's properties
 UEconomyManagerComponent::UEconomyManagerComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
-
-void UEconomyManagerComponent::RegisterSource(TScriptInterface<IPassiveIncomeSource> Source)
+void UEconomyManagerComponent::RegisterSource(UPassiveCostComponent* Source)
 {
 	if (!Source)
 	{
-		UE_LOG(LogTemp, Error, TEXT("EconomyManager is null in %s"), *GetOwner()->GetName());
+		UE_LOG(LogTemp, Error, TEXT("Tried to register null source in %s"), *GetOwner()->GetName());
 		return;
 	}
-	PassiveSources.Add(Source);
+
+	if (Source->GetClass()->ImplementsInterface(UPassiveIncomeSource::StaticClass()))
+	{
+		TScriptInterface<IPassiveIncomeSource> InterfaceWrapper;
+		InterfaceWrapper.SetObject(Source);                                   // the UObject*
+		InterfaceWrapper.SetInterface(Cast<IPassiveIncomeSource>(Source));    // the interface pointer
+
+		PassiveSources.Add(InterfaceWrapper);
+
+		UE_LOG(LogTemp, Display, TEXT("Registered PassiveIncomeSource: %s"), *Source->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Component %s does not implement PassiveIncomeSource"),
+			*Source->GetName());
+	}
 }
 
 void UEconomyManagerComponent::TickEconomy()
 {
 	for (auto& Source : PassiveSources)
 	{
-		if (!Source) continue;  
-		// Skip if the source pointer is invalid
+		if (!Source) continue;
 
-		ElapsedTimeMap[Source] += GlobalInterval;  
-		// Add the manager’s tick interval to this source’s elapsed time counter
+		UObject* SourceObject = Source.GetObject();
+		if (!SourceObject) continue;
 
-		if (!Source->IsActive()) continue;  
-		// Skip if the source is currently inactive (e.g. disabled building)
-
-		if (ElapsedTimeMap[Source] >= Source->GetInterval())
+		// Validate interface
+		if (SourceObject->GetClass()->ImplementsInterface(UPassiveIncomeSource::StaticClass()))
 		{
-			auto Bundle = Source->GetIncomeBundles();  
-			// Get the map of resources (Tag → Amount) from the source
-
-			if (CurrencyComponent)
+			// IsActive
+			if (!IPassiveIncomeSource::Execute_IsActive(SourceObject))
 			{
-				CurrencyComponent->ApplyTransaction(Bundle);  
-				// Apply the entire resource bundle to the player’s wallet
+				continue;
 			}
 
-			ElapsedTimeMap[Source] = 0.0f;  
-			// Reset this source’s elapsed timer so it can count again
+			// Track elapsed time
+			float& Elapsed = ElapsedTimeMap.FindOrAdd(Source);
+			Elapsed += GlobalInterval;
+
+			// Check interval
+			const float Interval = IPassiveIncomeSource::Execute_GetInterval(SourceObject);
+			if (Elapsed >= Interval)
+			{
+				// Get bundle
+				const TMap<FGameplayTag, int32> Bundle = IPassiveIncomeSource::Execute_GetIncomeBundles(SourceObject);
+
+				if (CurrencyComponent)
+				{
+					CurrencyComponent->ApplyTransaction(Bundle);
+				}
+
+				Elapsed = 0.0f; // reset timer
+			}
 		}
 	}
 }
 
-// Called when the game starts
 void UEconomyManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Start the timer
 	GetWorld()->GetTimerManager().SetTimer(
-	EconomyTickTimer,  // the handle
-	this, // object that owns the function
-	&UEconomyManagerComponent::TickEconomy, // function pointer
-	GlobalInterval, // time in seconds
-	true // looping?
+		EconomyTickTimer,
+		this,
+		&UEconomyManagerComponent::TickEconomy,
+		GlobalInterval,
+		true
 	);
 
-	//temperoray assigment 
-	ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0); // get the player
+	if (GetWorld()->GetTimerManager().IsTimerActive(EconomyTickTimer))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Economy timer is ACTIVE"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Economy timer FAILED to start"));
+	}
 
+	// Temporary assignment of player's currency component
+	ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	if (Player)
 	{
-		CurrencyComponent = Player->FindComponentByClass<UCurrencyComponent>(); // assign the currency comp of the player
-		// to this reference
+		CurrencyComponent = Player->FindComponentByClass<UCurrencyComponent>();
 	}
-	
-	// ...
-	
 }
 
-
-// Called every frame
 void UEconomyManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
-

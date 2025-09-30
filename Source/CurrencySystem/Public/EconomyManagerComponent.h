@@ -5,48 +5,47 @@
 #include "CoreMinimal.h"
 #include "CurrencyComponent.h"
 #include "Components/ActorComponent.h"
+#include "PassiveIncomeSource.h"
 #include "EconomyManagerComponent.generated.h"
 
-
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class CURRENCYSYSTEM_API UEconomyManagerComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UEconomyManagerComponent();
-	UPROPERTY(editAnywhere, BlueprintReadWrite)
-	TArray<TScriptInterface<IPassiveIncomeSource>> PassiveSources; //to store the passive soruces
 
+	// All registered passive income sources (via interface)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FTimerHandle EconomyTickTimer;// how often the passive tick should be done
+	TArray<TScriptInterface<IPassiveIncomeSource>> PassiveSources;
 
-	TMap<TScriptInterface<IPassiveIncomeSource>, float> ElapsedTimeMap; // to store the elapsed time of each source
-	
+	// Timer handle for the economy tick
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float GlobalInterval;
+	FTimerHandle EconomyTickTimer;
 
+	// Map of elapsed time per source
+	TMap<TScriptInterface<IPassiveIncomeSource>, float> ElapsedTimeMap;
+
+	// Global tick interval (seconds)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float GlobalInterval = 1.0f;
+
+	// Reference to the player’s currency component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCurrencyComponent* CurrencyComponent;
 
+	// Register a passive source (must implement interface)
 	UFUNCTION(BlueprintCallable)
-	void RegisterSource(TScriptInterface<IPassiveIncomeSource> Source);
+	void RegisterSource(class UPassiveCostComponent* Source);
 
-	//UFUNCTION(BlueprintCallable)
-	//void UnRegisterSource(TScriptInterface<IPassiveIncomeSource> Source);
-
+	// Economy tick
 	UFUNCTION(BlueprintCallable)
 	void TickEconomy();
-	
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override; 
 };
