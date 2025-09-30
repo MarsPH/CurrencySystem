@@ -61,9 +61,6 @@ public:
 	// =============================================================
 
 	UPROPERTY(EditAnywhere)
-	int32 CurrentCurrency;
-
-	UPROPERTY(EditAnywhere)
 	int32 MaxCurrency;
 
 	// Array-based representation of balances (alternative to TMap)
@@ -94,9 +91,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Currency|Management")
 	bool ApplyTransaction(TMap<FGameplayTag, int> CurrencyTags);
-
-	//UFUNCTION(BlueprintCallable)
-	//bool CanAfford(int32 Amount);
+	
 
 	UFUNCTION(BlueprintCallable, Category="Currency|Purchase")
 	void Purchase(UObject* ObjectToBuy);
