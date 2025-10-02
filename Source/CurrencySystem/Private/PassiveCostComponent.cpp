@@ -48,14 +48,11 @@ EDepositType UPassiveCostComponent::GetIncomeDepositState_Implementation()
 	return IPassiveIncomeSource::GetIncomeDepositState_Implementation();
 }
 
-void UPassiveCostComponent::DepositIncomeIntoBank_Implementation(TMap<FGameplayTag, int32> IncomeBundle)
+void UPassiveCostComponent::DepositIncomeIntoBank_Implementation(const TMap<FGameplayTag, int32>& IncomeBundle)
 {
-	for (const auto& ElemToAdd : IncomeBundle)
+	for (auto& ElemToAdd : IncomeBundle)
 	{
-		for (const auto& ElemToStore : IncomeBundleToStoreInBank[ElemToAdd.Key])
-		{
-			ElemToStore.Value += ElemToAdd.Value;
-		}
+		IncomeBundleToStoreInBank.FindOrAdd(ElemToAdd.Key) += ElemToAdd.Value;
 	}
 	IICostable::Execute_SetCostBundle(Bank->_getUObject(),IncomeBundleToStoreInBank);
 }

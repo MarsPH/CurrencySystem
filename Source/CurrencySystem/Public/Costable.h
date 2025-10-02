@@ -25,7 +25,7 @@ public:
 
 	virtual TMap<FGameplayTag, int32> GetCostBundle_Implementation() override;// to return the cost bundle in the interface
 
-	virtual void SetCostBundle_Implementation(TMap<FGameplayTag, int32> bundle) override;
+	virtual void SetCostBundle_Implementation( const TMap<FGameplayTag, int32>& bundle) override;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	TMap<FGameplayTag, int32> CostBundle;// instead of a single cost there is a cost bundle map now

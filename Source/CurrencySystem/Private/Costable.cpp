@@ -33,7 +33,7 @@ TMap<FGameplayTag, int32> ACostable::GetCostBundle_Implementation()
 	return CostBundle;//returns the cost bundle of this costable
 }
 
-void ACostable::SetCostBundle_Implementation(TMap<FGameplayTag, int32> bundle)
+void ACostable::SetCostBundle_Implementation(const TMap<FGameplayTag, int32>& bundle)
 {
 	CostBundle = bundle;
 }

@@ -25,8 +25,10 @@ class CURRENCYSYSTEM_API IICostable
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	int32 GetCost();
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	TMap<FGameplayTag, int32> GetCostBundle(); // a map of costs, and keys to be passed to the currency component
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void SetCostBundle(TMap<FGameplayTag, int32> bundle);
+	void SetCostBundle(const TMap<FGameplayTag, int32>& bundle);
 };

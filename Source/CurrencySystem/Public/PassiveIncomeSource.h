@@ -36,5 +36,5 @@ public:
 	EDepositType GetIncomeDepositState(); // to get the state if the passive income is affecting directly or into the bank
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void DepositIncomeIntoBank(TMap<FGameplayTag, int32> IncomeBundles);
+	void DepositIncomeIntoBank(const TMap<FGameplayTag, int32>& IncomeBundles);
 };

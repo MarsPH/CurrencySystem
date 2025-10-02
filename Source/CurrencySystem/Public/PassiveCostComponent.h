@@ -37,7 +37,7 @@ public:
 
 	virtual EDepositType GetIncomeDepositState_Implementation() override;
 
-	virtual void DepositIncomeIntoBank_Implementation(TMap<FGameplayTag, int32> IncomeBundle) override;
+	virtual void DepositIncomeIntoBank_Implementation(const TMap<FGameplayTag, int32>& IncomeBundle) override;
 
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Settings")
