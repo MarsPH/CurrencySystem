@@ -3,6 +3,7 @@
 
 #include "PassiveCostComponent.h"
 
+#include "AsyncTreeDifferences.h"
 #include "Costable.h"
 #include "EconomyManagerComponent.h"
 #include "ICostable.h"
@@ -53,6 +54,11 @@ void UPassiveCostComponent::DepositIncomeIntoBank_Implementation(const TMap<FGam
 	for (auto& ElemToAdd : IncomeBundle)
 	{
 		IncomeBundleToStoreInBank.FindOrAdd(ElemToAdd.Key) += ElemToAdd.Value;
+	}
+	if (Bank == nullptr)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Bank is null"));
+		return;
 	}
 	IICostable::Execute_SetCostBundle(Bank->_getUObject(),IncomeBundleToStoreInBank);
 }
