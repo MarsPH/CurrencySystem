@@ -6,8 +6,6 @@
 #include "GameplayTagContainer.h"
 #include "ICostable.h"
 #include "GameFramework/Actor.h"
-#include "ICostable.h"
-#include "ICostDisplayable.h"
 #include "Components/WidgetComponent.h"
 
 #include "Costable.generated.h"
@@ -26,6 +24,8 @@ public:
 	virtual int32 GetCost_Implementation() override; //overreding of the interface of ICOSTABLE
 
 	virtual TMap<FGameplayTag, int32> GetCostBundle_Implementation() override;// to return the cost bundle in the interface
+
+	virtual void SetCostBundle_Implementation(TMap<FGameplayTag, int32> bundle) override;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	TMap<FGameplayTag, int32> CostBundle;// instead of a single cost there is a cost bundle map now

@@ -33,8 +33,8 @@ public:
 	bool IsActive();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	FString GetIncomeDepositState(); // to get the state if the passive income is affecting directly or into the bank
+	EDepositType GetIncomeDepositState(); // to get the state if the passive income is affecting directly or into the bank
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void DepositIncomeIntoBank();
+	void DepositIncomeIntoBank(TMap<FGameplayTag, int32> IncomeBundles);
 };

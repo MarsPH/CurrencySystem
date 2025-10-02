@@ -1,6 +1,8 @@
 #include "EconomyManagerComponent.h"
 
+#include "AsyncTreeDifferences.h"
 #include "CurrencyComponent.h"
+#include "EconomyTypes.h"
 #include "PassiveCostComponent.h"
 #include "PassiveIncomeSource.h"
 #include "GameFramework/Character.h"
@@ -47,33 +49,50 @@ void UEconomyManagerComponent::TickEconomy()
 		if (!SourceObject) continue;
 
 		// Validate interface
-		if (SourceObject->GetClass()->ImplementsInterface(UPassiveIncomeSource::StaticClass()))
+		if (!SourceObject->GetClass()->ImplementsInterface(UPassiveIncomeSource::StaticClass()))
+			continue;
+		// IsActive
+		if (!IPassiveIncomeSource::Execute_IsActive(SourceObject))
 		{
-			// IsActive
-			if (!IPassiveIncomeSource::Execute_IsActive(SourceObject))
-			{
-				continue;
-			}
-
-			// Track elapsed time
-			float& Elapsed = ElapsedTimeMap.FindOrAdd(Source);
-			Elapsed += GlobalInterval;
-
-			// Check interval
-			const float Interval = IPassiveIncomeSource::Execute_GetInterval(SourceObject);
-			if (Elapsed >= Interval)
-			{
-				// Get bundle
-				const TMap<FGameplayTag, int32> Bundle = IPassiveIncomeSource::Execute_GetIncomeBundles(SourceObject);
-
-				if (CurrencyComponent)
-				{
-					CurrencyComponent->ApplyTransaction(Bundle);
-				}
-
-				Elapsed = 0.0f; // reset timer
-			}
+			continue;
 		}
+
+		// Track elapsed time
+		float& Elapsed = ElapsedTimeMap.FindOrAdd(Source);
+		Elapsed += GlobalInterval;
+
+		// Check interval
+		const float Interval = IPassiveIncomeSource::Execute_GetInterval(SourceObject);
+		if (Elapsed < Interval)
+			continue;
+		// Get bundle
+		const TMap<FGameplayTag, int32> Bundle = IPassiveIncomeSource::Execute_GetIncomeBundles(SourceObject);
+
+		if (!CurrencyComponent)
+		{
+			UE_LOG(LogTemp, Display, TEXT("CurrencyComponent is null"));
+			continue;
+		}
+
+		
+		EDepositType EconomyDepositType; //to store the deposite type
+		
+		EconomyDepositType = IPassiveIncomeSource::Execute_GetIncomeDepositState(SourceObject);
+
+		switch (EconomyDepositType)
+		{
+		case EDepositType::IntoBank:
+			IPassiveIncomeSource::Execute_DepositIncomeIntoBank(SourceObject, Bundle);
+			break;
+		case EDepositType::IntoCurrency:
+			CurrencyComponent->ApplyTransaction(Bundle);
+			break;
+		default:
+			UE_LOG(LogTemp, Error, TEXT("Current Deposit type is not supported"));
+			;
+		}
+
+		Elapsed = 0.0f; // reset timer
 	}
 }
 

@@ -3,6 +3,10 @@
 
 #include "PassiveCostComponent.h"
 
+#include "Costable.h"
+#include "EconomyManagerComponent.h"
+#include "ICostable.h"
+
 // Sets default values for this component's properties
 UPassiveCostComponent::UPassiveCostComponent()
 {
@@ -39,15 +43,23 @@ bool UPassiveCostComponent::IsActive_Implementation()
 	return true;
 }
 
-FString UPassiveCostComponent::GetIncomeDepositState_Implementation()
+EDepositType UPassiveCostComponent::GetIncomeDepositState_Implementation()
 {
 	return IPassiveIncomeSource::GetIncomeDepositState_Implementation();
 }
 
-void UPassiveCostComponent::DepositIncomeIntoBank_Implementation()
+void UPassiveCostComponent::DepositIncomeIntoBank_Implementation(TMap<FGameplayTag, int32> IncomeBundle)
 {
-	IPassiveIncomeSource::DepositIncomeIntoBank_Implementation();
+	for (const auto& ElemToAdd : IncomeBundle)
+	{
+		for (const auto& ElemToStore : IncomeBundleToStoreInBank[ElemToAdd.Key])
+		{
+			ElemToStore.Value += ElemToAdd.Value;
+		}
+	}
+	IICostable::Execute_SetCostBundle(Bank->_getUObject(),IncomeBundleToStoreInBank);
 }
+
 
 // Called when the game starts
 void UPassiveCostComponent::BeginPlay()

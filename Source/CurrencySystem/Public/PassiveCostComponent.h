@@ -3,20 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EconomyManagerComponent.h"
 #include "GameplayTagContainer.h"
 #include "PassiveIncomeSource.h"
 #include "Components/ActorComponent.h"
 #include "PassiveCostComponent.generated.h"
 
+class ACostable;
+class UEconomyManagerComponent;
 
-UENUM(BlueprintType)
-enum class EDepositType : uint8
-{
-	OptionA UMETA(DisplayName="Option A"),
-	OptionB UMETA(DisplayName="Option B"),
-	OptionC UMETA(DisplayName="Option C")
-};
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CURRENCYSYSTEM_API UPassiveCostComponent : public UActorComponent, public IPassiveIncomeSource
@@ -41,17 +35,22 @@ public:
 
 	virtual bool IsActive_Implementation() override;
 
-	virtual FString GetIncomeDepositState_Implementation() override;
+	virtual EDepositType GetIncomeDepositState_Implementation() override;
 
-	virtual void DepositIncomeIntoBank_Implementation() override;
+	virtual void DepositIncomeIntoBank_Implementation(TMap<FGameplayTag, int32> IncomeBundle) override;
 
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Settings")
 	EDepositType MyEnumValue;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ACostable* Bank;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FGameplayTag, int> IncomeBundleToStoreInBank;
 
 public:	
 	// Called every frame

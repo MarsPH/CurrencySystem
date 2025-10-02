@@ -5,6 +5,7 @@
 
 #include "DiffUtils.h"
 #include "EditorCategoryUtils.h"
+#include "ICostDisplayable.h"
 #include "Chaos/Deformable/ChaosDeformableCollisionsProxy.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -30,6 +31,11 @@ int32 ACostable::GetCost_Implementation()
 TMap<FGameplayTag, int32> ACostable::GetCostBundle_Implementation()
 {
 	return CostBundle;//returns the cost bundle of this costable
+}
+
+void ACostable::SetCostBundle_Implementation(TMap<FGameplayTag, int32> bundle)
+{
+	CostBundle = bundle;
 }
 
 
