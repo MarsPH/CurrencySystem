@@ -39,6 +39,16 @@ bool UPassiveCostComponent::IsActive_Implementation()
 	return true;
 }
 
+FString UPassiveCostComponent::GetIncomeDepositState_Implementation()
+{
+	return IPassiveIncomeSource::GetIncomeDepositState_Implementation();
+}
+
+void UPassiveCostComponent::DepositIncomeIntoBank_Implementation()
+{
+	IPassiveIncomeSource::DepositIncomeIntoBank_Implementation();
+}
+
 // Called when the game starts
 void UPassiveCostComponent::BeginPlay()
 {

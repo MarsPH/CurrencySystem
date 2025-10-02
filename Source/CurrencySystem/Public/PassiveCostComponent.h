@@ -10,6 +10,14 @@
 #include "PassiveCostComponent.generated.h"
 
 
+UENUM(BlueprintType)
+enum class EDepositType : uint8
+{
+	OptionA UMETA(DisplayName="Option A"),
+	OptionB UMETA(DisplayName="Option B"),
+	OptionC UMETA(DisplayName="Option C")
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CURRENCYSYSTEM_API UPassiveCostComponent : public UActorComponent, public IPassiveIncomeSource
 {
@@ -32,6 +40,14 @@ public:
 	virtual float GetInterval_Implementation() override;
 
 	virtual bool IsActive_Implementation() override;
+
+	virtual FString GetIncomeDepositState_Implementation() override;
+
+	virtual void DepositIncomeIntoBank_Implementation() override;
+
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Settings")
+	EDepositType MyEnumValue;
 
 protected:
 	// Called when the game starts
