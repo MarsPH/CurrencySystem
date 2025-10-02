@@ -36,8 +36,24 @@ TMap<FGameplayTag, int32> ACostable::GetCostBundle_Implementation()
 void ACostable::SetCostBundle_Implementation(const TMap<FGameplayTag, int32>& bundle)
 {
 	CostBundle = bundle;
+	if (WidgetComponent)
+	{
+		UpdateWidget();
+	}
 }
 
+
+void ACostable::UpdateWidget()
+{
+	if (UUserWidget* Widget = WidgetComponent->GetUserWidgetObject())
+	{
+		if (Widget->GetClass()->ImplementsInterface(UICostDisplayable::StaticClass()))
+		{
+			IICostDisplayable::Execute_SetCostToDisplay(Widget, CostBundle);
+			UKismetSystemLibrary::PrintString(this, Widget->GetName());
+		}
+	}
+}
 
 // Called when the game starts or when spawned
 void ACostable::BeginPlay()
@@ -68,14 +84,7 @@ void ACostable::BeginPlay()
 	}
 	if (WidgetComponent)
 	{
-		if (UUserWidget* Widget = WidgetComponent->GetUserWidgetObject())
-		{
-			if (Widget->GetClass()->ImplementsInterface(UICostDisplayable::StaticClass()))
-			{
-				IICostDisplayable::Execute_SetCostToDisplay(Widget, CostBundle);
-				UKismetSystemLibrary::PrintString(this, Widget->GetName());
-			}
-		}
+		UpdateWidget();
 	}
 
 	

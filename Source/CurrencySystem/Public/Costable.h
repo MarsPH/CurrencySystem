@@ -27,6 +27,9 @@ public:
 
 	virtual void SetCostBundle_Implementation( const TMap<FGameplayTag, int32>& bundle) override;
 
+	UFUNCTION()
+	void UpdateWidget();
+
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	TMap<FGameplayTag, int32> CostBundle;// instead of a single cost there is a cost bundle map now
 	
