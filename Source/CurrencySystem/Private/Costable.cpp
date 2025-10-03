@@ -66,6 +66,7 @@ bool ACostable::GetIsEmpty_Implementation()
 void ACostable::SetIsEmpty_Implementation(bool isEmptyInput)
 {
 	isEmpty = isEmptyInput;
+	UpdateWidget();
 }
 
 

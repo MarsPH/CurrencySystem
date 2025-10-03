@@ -79,9 +79,6 @@ void UPassiveCostComponent::DepositIncomeIntoBank_Implementation(const TMap<FGam
 		
 		IICostable::Execute_SetCostBundle(Bank->_getUObject(), IncomeBundleToStoreInBank);
 	}
-
-	
-
 }
 
 void UPassiveCostComponent::EmptyBank_Implementation()
