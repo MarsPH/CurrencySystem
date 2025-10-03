@@ -31,12 +31,12 @@ int32 ACostable::GetCost_Implementation()
 
 TMap<FGameplayTag, int32> ACostable::GetCostBundle_Implementation()
 {
-	isEmpty = false;
 	return CostBundle;//returns the cost bundle of this costable
 }
 
 void ACostable::SetCostBundle_Implementation(const TMap<FGameplayTag, int32>& bundle)
 {
+	isEmpty = false;
 	CostBundle = bundle;
 	if (WidgetComponent)
 	{
@@ -61,6 +61,11 @@ bool ACostable::IsEmptiable_Implementation()
 bool ACostable::GetIsEmpty_Implementation()
 {
 	return IICostable::GetIsEmpty_Implementation();
+}
+
+void ACostable::SetIsEmpty_Implementation(bool isEmptyInput)
+{
+	isEmpty = isEmptyInput;
 }
 
 

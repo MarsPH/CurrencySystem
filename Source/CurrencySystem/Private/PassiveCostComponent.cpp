@@ -53,7 +53,6 @@ void UPassiveCostComponent::DepositIncomeIntoBank_Implementation(const TMap<FGam
 {
 	//in order to know if bank is emptied already or not
 	TMap<FGameplayTag, int32> BankBundle = IICostable::Execute_GetCostBundle(Bank); //to store the bank bundle
-	bool isBankEmpty = false;
 	if (Bank == nullptr)
 	{
 		UE_LOG(LogTemp, Display, TEXT("Bank is null"));
@@ -61,23 +60,24 @@ void UPassiveCostComponent::DepositIncomeIntoBank_Implementation(const TMap<FGam
 	}
 	
 	
-	if (!BundleToStoreAlreadyEmptied)
-	{
+	/*
 		//Checks if BankBundle has something inside if yes it breaks and won't continue to empty the IncomeBundle
 		for (auto& Elem : BankBundle)
 		{
 			if (Elem.Value != 0) // found something
 			{
-				break; // no need to check further
+				
+				break;
 			}
 		}
-
+*/
+	if (IICostable::Execute_GetIsEmpty(Bank))
+	{
 		//SetsIncome Bundle to 0 if BankBundle is 0 to not pass a value again and then sets BundleToStoreEmptied to true
 		for (const auto& Elem : IncomeBundleToStoreInBank)
 		{
-			IncomeBundleToStoreInBank.FindOrAdd(Elem.Key) = 0;
+			IncomeBundleToStoreInBank.FindOrAdd(Elem.Key) = 1;
 		}
-		BundleToStoreAlreadyEmptied = true;
 	}
 	else
 	{
@@ -86,14 +86,21 @@ void UPassiveCostComponent::DepositIncomeIntoBank_Implementation(const TMap<FGam
 		{
 			IncomeBundleToStoreInBank.FindOrAdd(ElemToAdd.Key) += ElemToAdd.Value;
 		}
+		
 		IICostable::Execute_SetCostBundle(Bank->_getUObject(), IncomeBundleToStoreInBank);
 	}
+
+	
 
 }
 
 void UPassiveCostComponent::EmptyBank_Implementation()
 {
-	BundleToStoreAlreadyEmptied = false;
+	//SetsIncome Bundle to 0 if BankBundle is 0 to not pass a value again and then sets BundleToStoreEmptied to true
+	for (const auto& Elem : IncomeBundleToStoreInBank)
+	{
+		IncomeBundleToStoreInBank.FindOrAdd(Elem.Key) = 0;
+	}
 }
 
 

@@ -33,6 +33,8 @@ public:
 
 	virtual bool GetIsEmpty_Implementation() override;
 
+	virtual void SetIsEmpty_Implementation(bool isEmptyInput) override;
+
 	UFUNCTION()
 	void UpdateWidget();
 

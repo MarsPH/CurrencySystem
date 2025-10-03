@@ -40,4 +40,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	bool GetIsEmpty();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetIsEmpty(bool isEmptyInput);
 };
