@@ -41,7 +41,7 @@ public:
 
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Settings")
-	EDepositType MyEnumValue;
+	EDepositType DepositType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ACostable* Bank;

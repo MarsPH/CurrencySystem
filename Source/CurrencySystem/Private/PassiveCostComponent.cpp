@@ -46,7 +46,7 @@ bool UPassiveCostComponent::IsActive_Implementation()
 
 EDepositType UPassiveCostComponent::GetIncomeDepositState_Implementation()
 {
-	return IPassiveIncomeSource::GetIncomeDepositState_Implementation();
+	return DepositType;
 }
 
 void UPassiveCostComponent::DepositIncomeIntoBank_Implementation(const TMap<FGameplayTag, int32>& IncomeBundle)
