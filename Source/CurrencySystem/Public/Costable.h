@@ -31,6 +31,8 @@ public:
 
 	virtual bool IsEmptiable_Implementation() override;
 
+	virtual bool GetIsEmpty_Implementation() override;
+
 	UFUNCTION()
 	void UpdateWidget();
 
@@ -45,6 +47,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isEmptiable;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool isEmpty;
 
 	
 

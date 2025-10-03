@@ -31,6 +31,7 @@ int32 ACostable::GetCost_Implementation()
 
 TMap<FGameplayTag, int32> ACostable::GetCostBundle_Implementation()
 {
+	isEmpty = false;
 	return CostBundle;//returns the cost bundle of this costable
 }
 
@@ -49,11 +50,17 @@ void ACostable::EmptyBank_Implementation()
 	{
 		Elem.Value = 0;
 	}
+	isEmpty = true;
 }
 
 bool ACostable::IsEmptiable_Implementation()
 {
 	return isEmptiable;
+}
+
+bool ACostable::GetIsEmpty_Implementation()
+{
+	return IICostable::GetIsEmpty_Implementation();
 }
 
 

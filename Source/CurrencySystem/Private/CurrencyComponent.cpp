@@ -165,7 +165,7 @@ void UCurrencyComponent::OverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 		//empty its bank(note that regular passive components that sends to currency component dont need to be overlapped)
 		Purchase(OtherActor);
 		IICostable::Execute_EmptyBank(OtherActor);
-		
+
 	}
 	else
 	{

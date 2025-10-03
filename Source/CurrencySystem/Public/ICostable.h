@@ -37,4 +37,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	bool IsEmptiable();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	bool GetIsEmpty();
 };
