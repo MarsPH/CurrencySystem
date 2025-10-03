@@ -60,24 +60,14 @@ void UPassiveCostComponent::DepositIncomeIntoBank_Implementation(const TMap<FGam
 	}
 	
 	
-	/*
-		//Checks if BankBundle has something inside if yes it breaks and won't continue to empty the IncomeBundle
-		for (auto& Elem : BankBundle)
-		{
-			if (Elem.Value != 0) // found something
-			{
-				
-				break;
-			}
-		}
-*/
 	if (IICostable::Execute_GetIsEmpty(Bank))
 	{
 		//SetsIncome Bundle to 0 if BankBundle is 0 to not pass a value again and then sets BundleToStoreEmptied to true
 		for (const auto& Elem : IncomeBundleToStoreInBank)
 		{
-			IncomeBundleToStoreInBank.FindOrAdd(Elem.Key) = 1;
+			IncomeBundleToStoreInBank.FindOrAdd(Elem.Key) = 0;
 		}
+		IICostable::Execute_SetIsEmpty(Bank, false);
 	}
 	else
 	{

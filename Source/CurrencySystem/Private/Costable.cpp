@@ -60,7 +60,7 @@ bool ACostable::IsEmptiable_Implementation()
 
 bool ACostable::GetIsEmpty_Implementation()
 {
-	return IICostable::GetIsEmpty_Implementation();
+	return isEmpty;
 }
 
 void ACostable::SetIsEmpty_Implementation(bool isEmptyInput)
