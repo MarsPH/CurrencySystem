@@ -31,4 +31,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void SetCostBundle(const TMap<FGameplayTag, int32>& bundle);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void EmptyBank();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	bool IsEmptiable();
 };

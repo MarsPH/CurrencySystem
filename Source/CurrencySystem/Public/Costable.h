@@ -27,6 +27,10 @@ public:
 
 	virtual void SetCostBundle_Implementation( const TMap<FGameplayTag, int32>& bundle) override;
 
+	virtual void EmptyBank_Implementation() override;
+
+	virtual bool IsEmptiable_Implementation() override;
+
 	UFUNCTION()
 	void UpdateWidget();
 
@@ -38,6 +42,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FGameplayTag CostCurrencyType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool isEmptiable;
 
 	
 

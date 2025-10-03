@@ -25,9 +25,11 @@
 
 #include "ICostable.h"
 #include "MovieSceneTracksComponentTypes.h"
+#include "PassiveCostComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/TimelineComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Net/RepLayout.h"
 
 // =============================================================
 // Constructor & Initialization
@@ -155,7 +157,20 @@ void UCurrencyComponent::OverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 	//Checks for the implementation of the otherClass that is overlapped
 	//if implmented, tries to assign the Cost of the costable to a variable
 	//The variable passes to the SpendCurrency()
-	Purchase(OtherActor);
+
+	//tries to get the passive cost component on the obj if not exist then proceeds with regular costable purchase
+	bool isEmptiable = IICostable::Execute_IsEmptiable(OtherActor);
+	if (isEmptiable)
+	{
+		//empty its bank(note that regular passive components that sends to currency component dont need to be overlapped)
+		Purchase(OtherActor);
+		IICostable::Execute_EmptyBank(OtherActor);
+		
+	}
+	else
+	{
+		Purchase(OtherActor);
+	}
 }
 
 /*	

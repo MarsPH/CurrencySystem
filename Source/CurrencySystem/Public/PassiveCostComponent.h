@@ -39,6 +39,10 @@ public:
 
 	virtual void DepositIncomeIntoBank_Implementation(const TMap<FGameplayTag, int32>& IncomeBundle) override;
 
+	virtual void EmptyBank_Implementation() override;
+
+	UPROPERTY()
+	bool BundleToStoreAlreadyEmptied = false;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Settings")
 	EDepositType DepositType;

@@ -6,6 +6,7 @@
 #include "DiffUtils.h"
 #include "EditorCategoryUtils.h"
 #include "ICostDisplayable.h"
+#include "PassiveIncomeSource.h"
 #include "Chaos/Deformable/ChaosDeformableCollisionsProxy.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -40,6 +41,19 @@ void ACostable::SetCostBundle_Implementation(const TMap<FGameplayTag, int32>& bu
 	{
 		UpdateWidget();
 	}
+}
+
+void ACostable::EmptyBank_Implementation()
+{
+	for(auto& Elem : CostBundle)
+	{
+		Elem.Value = 0;
+	}
+}
+
+bool ACostable::IsEmptiable_Implementation()
+{
+	return isEmptiable;
 }
 
 

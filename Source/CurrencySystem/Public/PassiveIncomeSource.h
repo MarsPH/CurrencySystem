@@ -37,4 +37,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void DepositIncomeIntoBank(const TMap<FGameplayTag, int32>& IncomeBundles);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void EmptyBank();
+	
 };
