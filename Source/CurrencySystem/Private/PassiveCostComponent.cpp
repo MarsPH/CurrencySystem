@@ -62,31 +62,16 @@ void UPassiveCostComponent::DepositIncomeIntoBank_Implementation(const TMap<FGam
 	
 	if (IICostable::Execute_GetIsEmpty(Bank))
 	{
-		UE_LOG(LogTemp, Warning, TEXT(">>> Bank is empty, clearing IncomeBundleToStoreInBank."));
 
 		for (auto& Elem : IncomeBundleToStoreInBank)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Clearing key %s (old value: %d)"), *Elem.Key.ToString(), Elem.Value);
 			Elem.Value = 0;
-		}
-
-		UE_LOG(LogTemp, Warning, TEXT("All entries set to 0. Final contents:"));
-		for (const auto& Elem : IncomeBundleToStoreInBank)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("%s : %d"), *Elem.Key.ToString(), Elem.Value);
 		}
 
 		IICostable::Execute_SetIsEmpty(Bank, false);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Depositing:"));
-		for (const auto& Elem : IncomeBundle)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("%s : %d"), *Elem.Key.ToString(), Elem.Value);
-		}
-		UE_LOG(LogTemp, Warning, TEXT("Before deposit: %d entries"), IncomeBundleToStoreInBank.Num());
-		
 		//Depositing Value
 		for (auto& ElemToAdd : IncomeBundle)
 		{
@@ -94,9 +79,7 @@ void UPassiveCostComponent::DepositIncomeIntoBank_Implementation(const TMap<FGam
 		}
 		
 		IICostable::Execute_SetCostBundle(Bank->_getUObject(), IncomeBundleToStoreInBank);
-
-		UE_LOG(LogTemp, Warning, TEXT("After deposit: %d entries"), IncomeBundleToStoreInBank.Num());
-
+		IncomeBundleToStoreInBank.Empty(); // Reset for next cycle
 	}
 }
 

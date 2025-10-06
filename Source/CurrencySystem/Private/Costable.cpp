@@ -37,7 +37,10 @@ TMap<FGameplayTag, int32> ACostable::GetCostBundle_Implementation()
 void ACostable::SetCostBundle_Implementation(const TMap<FGameplayTag, int32>& bundle)
 {
 	isEmpty = false;
-	CostBundle = bundle;
+	for (const auto& Elem: bundle)
+	{
+		CostBundle.FindOrAdd(Elem.Key) += Elem.Value;
+	}
 	if (WidgetComponent)
 	{
 		UpdateWidget();
