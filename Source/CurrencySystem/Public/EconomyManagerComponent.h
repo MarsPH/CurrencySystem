@@ -43,6 +43,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void TickEconomy();
 
+	//Saving & Loading
+	UFUNCTION(BlueprintCallable)
+	void SaveEconomy();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadEconomy();
+
 protected:
 	virtual void BeginPlay() override;
 

@@ -103,6 +103,16 @@ public:
 	UPROPERTY()
 	UBoxComponent* BoxComponent;
 
+	// =============================================================
+	// Save & Load
+	// =============================================================
+
+	UFUNCTION(BlueprintCallable, Category="Currency|Getter & Setter")
+	const TMap<FGameplayTag, int32> GetCurrencyBalances();
+
+	UFUNCTION(BlueprintCallable, Category="Currency|Getter & Getter")
+	void SetCurrencyBalances (TMap<FGameplayTag, int32> CurrencyBalanceBundles);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

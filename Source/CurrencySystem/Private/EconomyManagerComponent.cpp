@@ -1,7 +1,11 @@
 #include "EconomyManagerComponent.h"
 
+#include <Windows.Data.Text.h>
+
 #include "AsyncTreeDifferences.h"
+#include "Costable.h"
 #include "CurrencyComponent.h"
+#include "EconomySaveGame.h"
 #include "EconomyTypes.h"
 #include "PassiveCostComponent.h"
 #include "PassiveIncomeSource.h"
@@ -130,3 +134,56 @@ void UEconomyManagerComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
+
+void UEconomyManagerComponent::SaveEconomy()
+{
+	UEconomySaveGame* SaveGameObject = Cast<UEconomySaveGame>(
+		UGameplayStatics::CreateSaveGameObject(UEconomySaveGame::StaticClass()));
+
+	//Save playerCurrency 
+	if (CurrencyComponent)
+		SaveGameObject->PlayerCurrencyData = CurrencyComponent->GetCurrencyBalances();
+	// Save Banks
+	TArray<AActor*> Banks;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACostable::StaticClass(), Banks);
+	for (AActor* Actor : Banks)
+	{
+			if (ACostable* Bank = Cast<ACostable>(Actor))
+			{
+				FBankSaveData SaveData;
+				SaveData.CostBundle = Bank->GetBankBundles();
+				SaveData.isEmpty = IICostable::Execute_GetIsEmpty(Bank);
+				SaveGameObject->BankData.Add(Bank->BankID,SaveData);
+			}
+	}
+
+	UGameplayStatics::SaveGameToSlot(SaveGameObject, TEXT("EconomySlot"), 0 );
+}
+
+void UEconomyManagerComponent::LoadEconomy()
+{
+	if (USaveGame* Loaded = UGameplayStatics::LoadGameFromSlot(TEXT("EconomySlot"), 0))
+	{
+		UEconomySaveGame* SaveGameObject = Cast<UEconomySaveGame>(Loaded);
+		if (!SaveGameObject) return;
+
+		if (CurrencyComponent)
+			CurrencyComponent->SetCurrencyBalances(SaveGameObject->PlayerCurrencyData);
+
+		TArray<AActor*> Banks;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACostable::StaticClass(), Banks);
+		for (AActor* Actor : Banks)
+		{
+			if (ACostable* Bank = Cast<ACostable>(Actor))
+			{
+				if (FBankSaveData* Found = SaveGameObject->BankData.Find(Bank->BankID))
+				{
+					Bank->SetBankBundle(Found->CostBundle);
+					IICostable::Execute_SetIsEmpty(Bank, Found->isEmpty);
+				}
+			}
+		}
+	}
+
+}
+

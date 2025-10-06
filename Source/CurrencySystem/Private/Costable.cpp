@@ -82,6 +82,17 @@ void ACostable::UpdateWidget()
 	}
 }
 
+TMap<FGameplayTag, int32> ACostable::GetBankBundles()
+{
+	return CostBundle;
+}
+
+void ACostable::SetBankBundle(const TMap<FGameplayTag, int32>& Newbundle)
+{
+	CostBundle = Newbundle;
+	UpdateWidget();
+}
+
 // Called when the game starts or when spawned
 void ACostable::BeginPlay()
 {

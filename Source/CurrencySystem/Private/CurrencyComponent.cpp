@@ -144,6 +144,20 @@ void UCurrencyComponent::Purchase(UObject* ObjectToBuy)
 	}
 }
 
+const TMap<FGameplayTag, int32> UCurrencyComponent::GetCurrencyBalances()
+{
+	return CurrencyBalances;
+}
+
+void UCurrencyComponent::SetCurrencyBalances(TMap<FGameplayTag, int32> CurrencyBalanceBundles)
+{
+	CurrencyBalances = CurrencyBalanceBundles;
+
+	for (const auto& Entry : CurrencyBalanceBundles)
+	{
+		OnCurrencyChanged.Broadcast(Entry.Value, Entry.Value,true, Entry.Key);
+	}
+}
 
 
 // =============================================================

@@ -56,6 +56,14 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool NeedWidgetUpdate;
 
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="Bank")
+	FName BankID;
+
+	UFUNCTION()
+	TMap<FGameplayTag, int32> GetBankBundles();
+
+	UFUNCTION()
+	void SetBankBundle(const TMap<FGameplayTag, int32>& Newbundle);
 	
 
 protected:
