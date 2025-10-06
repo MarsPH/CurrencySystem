@@ -1,7 +1,4 @@
 #include "EconomyManagerComponent.h"
-
-#include <Windows.Data.Text.h>
-
 #include "AsyncTreeDifferences.h"
 #include "Costable.h"
 #include "CurrencyComponent.h"
