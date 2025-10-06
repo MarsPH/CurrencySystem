@@ -128,7 +128,7 @@ void ACostable::BeginPlay()
 		UpdateWidget();
 	}
 
-	
+	InitialCostBundle = CostBundle;
 		//WidgetComponent->InitWidget();
 
 		//checks that the ObjectToBuy implments Costable interface. 
@@ -198,9 +198,7 @@ void ACostable::Restore()
 	SetActorEnableCollision(true);
 	SetActorTickEnabled(true);
 
-	// If you want to refill it completely:
-	for (auto& Elem : CostBundle)
-		Elem.Value = FMath::Max(Elem.Value, 0); // restore baseline value
+	CostBundle = InitialCostBundle;
 
 	UpdateWidget();
 	UE_LOG(LogTemp, Warning, TEXT("%s restored and unvanished."), *GetName());

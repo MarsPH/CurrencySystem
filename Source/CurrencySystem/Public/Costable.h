@@ -99,6 +99,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UWidgetComponent* WidgetComponent;
 
+	UPROPERTY()
+	TMap<FGameplayTag, int32> InitialCostBundle;
+
 
 public:	
 	// Called every frame
