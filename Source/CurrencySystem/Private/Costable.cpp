@@ -51,6 +51,9 @@ void ACostable::EmptyBank_Implementation()
 		Elem.Value = 0;
 	}
 	isEmpty = true;
+	UpdateWidget();
+
+	Vanish();
 }
 
 bool ACostable::IsEmptiable_Implementation()
@@ -173,7 +176,18 @@ void ACostable::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	
-	
-	
 }
+
+void ACostable::Vanish()
+{
+	if (!IsVanishable)
+		return;
+
+	SetActorHiddenInGame(true);
+	SetActorEnableCollision(false);
+	SetActorTickEnabled(false);
+
+	UE_LOG(LogTemp, Warning, TEXT("%s vanished."), *GetName());
+}
+
 

@@ -64,7 +64,16 @@ public:
 
 	UFUNCTION()
 	void SetBankBundle(const TMap<FGameplayTag, int32>& Newbundle);
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Costable|Behvaior")
+	bool IsVanishable = false;
+
+	UFUNCTION(BlueprintCallable, Category="Costable|Behvaior")
+	void Vanish();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Costable|Behavior")
+	bool bIsConsumable = true;  // default true = one-time use
+
 
 protected:
 	// Called when the game starts or when spawned
