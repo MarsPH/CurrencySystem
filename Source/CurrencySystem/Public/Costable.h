@@ -71,6 +71,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Costable|Behvaior")
 	void Vanish();
 
+	UFUNCTION(BlueprintCallable, Category="Costable|Behavior")
+	void Restore();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Costable|Behavior")
 	bool bIsConsumable = true;  // default true = one-time use
 

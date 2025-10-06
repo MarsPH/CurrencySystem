@@ -190,4 +190,20 @@ void ACostable::Vanish()
 	UE_LOG(LogTemp, Warning, TEXT("%s vanished."), *GetName());
 }
 
+void ACostable::Restore()
+{
+	isEmpty = false;
+
+	SetActorHiddenInGame(false);
+	SetActorEnableCollision(true);
+	SetActorTickEnabled(true);
+
+	// If you want to refill it completely:
+	for (auto& Elem : CostBundle)
+		Elem.Value = FMath::Max(Elem.Value, 0); // restore baseline value
+
+	UpdateWidget();
+	UE_LOG(LogTemp, Warning, TEXT("%s restored and unvanished."), *GetName());
+}
+
 
