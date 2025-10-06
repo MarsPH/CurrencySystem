@@ -53,6 +53,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isEmpty;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool NeedWidgetUpdate;
+
 	
 
 protected:

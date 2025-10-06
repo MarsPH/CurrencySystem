@@ -41,10 +41,7 @@ void ACostable::SetCostBundle_Implementation(const TMap<FGameplayTag, int32>& bu
 	{
 		CostBundle.FindOrAdd(Elem.Key) += Elem.Value;
 	}
-	if (WidgetComponent)
-	{
-		UpdateWidget();
-	}
+	NeedWidgetUpdate = true;
 }
 
 void ACostable::EmptyBank_Implementation()
@@ -150,6 +147,14 @@ void ACostable::OnWidgetReady()
 void ACostable::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (NeedWidgetUpdate)
+	{
+		if (WidgetComponent)
+		{
+			UpdateWidget();
+			NeedWidgetUpdate = false;
+		}
+	}
 
 }
 
