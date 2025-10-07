@@ -39,6 +39,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RegisterSource(class UPassiveCostComponent* Source);
 
+	UFUNCTION(Blueprintable)
+	void UnregisterSource(class UPassiveCostComponent* Source);
+
 	// Economy tick
 	UFUNCTION(BlueprintCallable)
 	void TickEconomy();

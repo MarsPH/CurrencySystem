@@ -40,5 +40,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void EmptyBank();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void RegisterIncomeSource();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void UnregisterIncomeSource();
 	
 };

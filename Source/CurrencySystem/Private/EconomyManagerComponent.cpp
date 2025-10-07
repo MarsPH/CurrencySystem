@@ -40,6 +40,35 @@ void UEconomyManagerComponent::RegisterSource(UPassiveCostComponent* Source)
 	}
 }
 
+void UEconomyManagerComponent::UnregisterSource(class UPassiveCostComponent* Source)
+{
+	if (!Source)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Tried to un register null source in %s"), *GetOwner()->GetName());
+		return;
+	}
+
+	if (Source->GetClass()->ImplementsInterface(UPassiveIncomeSource::StaticClass()))
+	{
+		TScriptInterface<IPassiveIncomeSource> InterfaceWrapper;
+		InterfaceWrapper.SetObject(Source);
+		InterfaceWrapper.SetInterface(Cast<IPassiveIncomeSource>(Source));
+
+		PassiveSources.Remove(InterfaceWrapper);
+
+		ElapsedTimeMap.Remove(InterfaceWrapper);
+		
+		UE_LOG(LogTemp, Display, TEXT("Unregistered PassiveIncomeSource"));
+		
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Component %s does not implement PassiveIncomeSource"),
+			*Source->GetName());
+	}
+
+}
+
 void UEconomyManagerComponent::TickEconomy()
 {
 	for (auto& Source : PassiveSources)

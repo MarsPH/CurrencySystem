@@ -6,6 +6,7 @@
 #include "DiffUtils.h"
 #include "EditorCategoryUtils.h"
 #include "ICostDisplayable.h"
+#include "PassiveCostComponent.h"
 #include "PassiveIncomeSource.h"
 #include "Chaos/Deformable/ChaosDeformableCollisionsProxy.h"
 #include "Components/BoxComponent.h"
@@ -14,14 +15,13 @@
 // Sets default values
 ACostable::ACostable()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(FName("BoxComponent")); //Assigning an subobject of box comp
 	BoxComponent->SetBoxExtent(FVector(150.0f, 150.0f, 150.0f));
-	
+
 	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(FName("WidgetComponent"));
-	
 }
 
 int32 ACostable::GetCost_Implementation()
@@ -31,13 +31,13 @@ int32 ACostable::GetCost_Implementation()
 
 TMap<FGameplayTag, int32> ACostable::GetCostBundle_Implementation()
 {
-	return CostBundle;//returns the cost bundle of this costable
+	return CostBundle; //returns the cost bundle of this costable
 }
 
 void ACostable::SetCostBundle_Implementation(const TMap<FGameplayTag, int32>& bundle)
 {
 	isEmpty = false;
-	for (const auto& Elem: bundle)
+	for (const auto& Elem : bundle)
 	{
 		CostBundle.FindOrAdd(Elem.Key) += Elem.Value;
 	}
@@ -46,7 +46,7 @@ void ACostable::SetCostBundle_Implementation(const TMap<FGameplayTag, int32>& bu
 
 void ACostable::EmptyBank_Implementation()
 {
-	for(auto& Elem : CostBundle)
+	for (auto& Elem : CostBundle)
 	{
 		Elem.Value = 0;
 	}
@@ -100,11 +100,13 @@ void ACostable::SetBankBundle(const TMap<FGameplayTag, int32>& Newbundle)
 void ACostable::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 
 	RootComponent = GetRootComponent();
 	//BoxComponent = NewObject<UBoxComponent>(RootComponent); //creates an object and assign to box component
-	if (BoxComponent != nullptr){ //checks box component to be not null
+	if (BoxComponent != nullptr)
+	{
+		//checks box component to be not null
 
 		//BoxComponent->RegisterComponent();
 		//box component cant attach to itself
@@ -117,9 +119,9 @@ void ACostable::BeginPlay()
 	//WidgetComponent = NewObject<UWidgetComponent>(RootComponent);
 	if (WidgetComponent != nullptr)
 	{
-		WidgetComponent->RegisterComponent();//creates the physical state
+		WidgetComponent->RegisterComponent(); //creates the physical state
 		WidgetComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-		WidgetComponent-> SetRelativeLocation(FVector(0, -85,0 ));
+		WidgetComponent->SetRelativeLocation(FVector(0, -85, 0));
 
 		//WidgetComponent->SetHiddenInGame(true);//it only is visible under conditions
 	}
@@ -129,25 +131,20 @@ void ACostable::BeginPlay()
 	}
 
 	InitialCostBundle = CostBundle;
-		//WidgetComponent->InitWidget();
+	//WidgetComponent->InitWidget();
 
-		//checks that the ObjectToBuy implments Costable interface. 
-		
-	
-	
-	
-	
+	//checks that the ObjectToBuy implments Costable interface. 
 }
 
 void ACostable::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                             UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+                             const FHitResult& SweepResult)
 {
-	
-		//WidgetComponent->SetHiddenInGame(false);
+	//WidgetComponent->SetHiddenInGame(false);
 }
 
 void ACostable::OverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex)
+                           int32 OtherBodyIndex)
 {
 	//WidgetComponent->SetHiddenInGame(true);
 }
@@ -169,13 +166,11 @@ void ACostable::Tick(float DeltaTime)
 			NeedWidgetUpdate = false;
 		}
 	}
-
 }
 
 void ACostable::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-	
 }
 
 void ACostable::Vanish()
@@ -193,7 +188,6 @@ void ACostable::Vanish()
 void ACostable::Restore()
 {
 	isEmpty = false;
-
 	SetActorHiddenInGame(false);
 	SetActorEnableCollision(true);
 	SetActorTickEnabled(true);
@@ -203,5 +197,3 @@ void ACostable::Restore()
 	UpdateWidget();
 	UE_LOG(LogTemp, Warning, TEXT("%s restored and unvanished."), *GetName());
 }
-
-

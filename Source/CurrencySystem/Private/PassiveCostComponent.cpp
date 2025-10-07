@@ -92,6 +92,22 @@ void UPassiveCostComponent::EmptyBank_Implementation()
 	}
 }
 
+void UPassiveCostComponent::RegisterIncomeSource_Implementation()
+{
+	if (EconomyManager != nullptr)
+	{
+		EconomyManager->RegisterSource(this);
+	}
+}
+
+void UPassiveCostComponent::UnregisterIncomeSource_Implementation()
+{
+	if (EconomyManager != nullptr)
+	{
+		EconomyManager->UnregisterSource(this);
+	}
+}
+
 
 // Called when the game starts
 void UPassiveCostComponent::BeginPlay()
@@ -101,9 +117,9 @@ void UPassiveCostComponent::BeginPlay()
 	{
 		if (APawn* Pawn = PC->GetPawn())
 		{
-			if (UEconomyManagerComponent* Manager = Pawn->FindComponentByClass<UEconomyManagerComponent>())
+			if ((EconomyManager = Pawn->FindComponentByClass<UEconomyManagerComponent>()))
 			{
-				Manager->RegisterSource(this);
+				//EconomyManager->RegisterSource(this);
 			}
 			else
 			{

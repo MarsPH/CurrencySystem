@@ -41,6 +41,10 @@ public:
 
 	virtual void EmptyBank_Implementation() override;
 
+	virtual void RegisterIncomeSource_Implementation() override;
+
+	virtual void UnregisterIncomeSource_Implementation() override;
+
 	UPROPERTY()
 	bool BundleToStoreAlreadyEmptied = false;
 	
