@@ -12,10 +12,6 @@ It supports **multiple currencies**, **UI feedback**, **passive income**, and **
 
 Built entirely in **C++ and Blueprints**, the system demonstrates mastery of **interfaces**, **delegates**, and **component-based design** in Unreal Engine.
 
-<p align="center">
-  <img src="https://www.gamedevmarket.net/wp-content/uploads/2021/07/coins_pack_3.png" alt="Currency System Preview" width="400">
-</p>
-
 ---
 
 ## 🧩 Core Features  
@@ -66,26 +62,6 @@ graph TD
     C -.-> H["IPassiveIncomeSource Interface"]
     E -.-> I["IICostable Interface"]
 ```
-# ⚙️ Key Classes & Interfaces
-
-## 🧩 UCurrencyComponent
-
-Handles balance tracking, transactions, and automatic purchase overlaps.
-
-```
-void UCurrencyComponent::AddCurrency(int32 Amount, FGameplayTag CurrencyType);
-bool UCurrencyComponent::ApplyTransaction(TMap<FGameplayTag, int> CostBundle);
-void UCurrencyComponent::Purchase(UObject* ObjectToBuy);
-void UCurrencyComponent::OverlapBegin(...);
-```
-
-**AddCurrency()** — Adds and broadcasts updated balances.  
-**ApplyTransaction()** — Validates and applies multi-currency bundles atomically.  
-**Purchase()** — Handles buying via IICostable.  
-**OverlapBegin()** — Triggers automatic purchase or bank emptying.  
-
----
-
 
 ---
 
@@ -142,5 +118,3 @@ Implemented save/load and stability fixes.
 
 ---
 
-## 🗂️ References
-Coin Asset Pack — https://www.gamedevmarket.net/asset/coins-pack-3
