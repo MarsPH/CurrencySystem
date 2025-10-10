@@ -91,7 +91,7 @@ bool UCurrencyComponent::ApplyTransaction(TMap<FGameplayTag, int32> CostBundle)
 
 		if (!CurrencyBalances.Contains(CurrencyType))
 		{
-			return false;
+			CurrencyBalances.Add(CurrencyType);
 		}
 		
 		if (CurrencyBalances[CurrencyType] + CostAmount < 0) 
