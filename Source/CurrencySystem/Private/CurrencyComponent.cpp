@@ -94,10 +94,6 @@ bool UCurrencyComponent::ApplyTransaction(TMap<FGameplayTag, int32> CostBundle)
 {
 	//if current currency is less than 0 or the amount will cause current currency to be 0 return
 	//Note that some items can be free and be purchased while CurrentCurrency = 0
-
-	//IICostable* ObjectCostable = Cast<IICostable>(ObjectToBuy);
-	//TMap<FGameplayTag, int32> CostBundle = ObjectCostable->GetCostBundle();
-	
 	for (const TPair<FGameplayTag, int>& Entry : CostBundle)
 	{
 		FGameplayTag CurrencyType = Entry.Key;
@@ -168,8 +164,8 @@ void UCurrencyComponent::OverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 	{
 		//empty its bank(note that regular passive components that sends to currency component dont need to be overlapped)
 		TMap<FGameplayTag, int> CostBundle = IICostable::Execute_GetCostBundle(OtherActor);
-		ApplyTransaction(CostBundle);
-		IICostable::Execute_EmptyBank(OtherActor);
+		if (ApplyTransaction(CostBundle))
+			IICostable::Execute_EmptyBank(OtherActor);
 
 	}
 	else
@@ -178,8 +174,3 @@ void UCurrencyComponent::OverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 		ApplyTransaction(CostBundle);
 	}
 }
-
-/*	
-		UKismetSystemLibrary::PrintString(this, stringResult, true, false,
-			FColor::Red, 10, "SpentCurrency");
-*/
