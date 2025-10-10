@@ -89,6 +89,11 @@ bool UCurrencyComponent::ApplyTransaction(TMap<FGameplayTag, int32> CostBundle)
 		FGameplayTag CurrencyType = Entry.Key;
 		int32 CostAmount = Entry.Value;
 
+		if (!CurrencyBalances.Contains(CurrencyType))
+		{
+			return false;
+		}
+		
 		if (CurrencyBalances[CurrencyType] + CostAmount < 0) 
 		{
 			return false; //if the current amount held or be held will be less than 0, then won't let the spending happen
