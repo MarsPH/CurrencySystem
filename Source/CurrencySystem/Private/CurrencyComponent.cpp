@@ -80,16 +80,6 @@ void UCurrencyComponent::BeginPlay()
 // Currency Management
 // =============================================================
 
-void UCurrencyComponent::AddCurrency(int32 Amount, FGameplayTag CurrencyType)
-{
-	//adds the new amount to the current currency with its key, so that amount can be updated accordingly
-	CurrencyBalances[CurrencyType] += Amount;
-
-	// broadcasts current, so the ui can notice the currency change, and updates it
-	OnCurrencyChanged.Broadcast(CurrencyBalances[CurrencyType], Amount,
-		true, CurrencyType);
-}
-
 bool UCurrencyComponent::ApplyTransaction(TMap<FGameplayTag, int32> CostBundle)
 {
 	//if current currency is less than 0 or the amount will cause current currency to be 0 return
