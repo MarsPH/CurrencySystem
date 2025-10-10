@@ -90,11 +90,7 @@ public:
 	void AddCurrency(int32 Amount, FGameplayTag CurrencyType);
 
 	UFUNCTION(BlueprintCallable, Category="Currency|Management")
-	bool ApplyTransaction(TMap<FGameplayTag, int> CurrencyTags);
-	
-
-	UFUNCTION(BlueprintCallable, Category="Currency|Purchase")
-	void Purchase(UObject* ObjectToBuy);
+	bool ApplyTransaction(TMap<FGameplayTag, int32> CostBundle);
 
 	// =============================================================
 	// Collision
